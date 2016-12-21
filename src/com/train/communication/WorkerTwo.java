@@ -1,5 +1,6 @@
 package com.train.communication;
 
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,10 +11,10 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
-import com.train.database.Connector;
-import com.train.database.DataEntity;
-
 import org.json.*;
+
+import com.train.dao.DataEntityDao;
+import com.train.model.DataEntity;
 
 /**
  * @author gzf
@@ -23,18 +24,20 @@ public class WorkerTwo implements Runnable{
 	private Socket socket;
 	private BufferedReader in;
 	private PrintWriter out;
-	private Connector connector;
 	private Logger logger;
 	private Timer timer;
 	private TimerUpdate timerUpdate;
 	private int OperationCount = 0;     //操作次数统计
 	private DataEntity dataEntity;
 	private boolean UpdateFlag = false; //改动数据标记位
-	public WorkerTwo(Socket s, Connector conn, Logger logger, String IPAddress) throws IOException{
+	private String IPAddress;
+	private DataEntityDao dao;
+	public WorkerTwo(Socket s, Logger logger, String IPAddress) throws IOException{
 		this.timer = new Timer();
-		this.dataEntity = new DataEntity(IPAddress);
+		this.dao = new DataEntityDao();
+		this.dataEntity = new DataEntity();
+		this.IPAddress = IPAddress;
 		this.socket = s;
-		this.connector = conn;
 		this.logger = logger;
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		//Enable auto-flush
@@ -51,24 +54,6 @@ public class WorkerTwo implements Runnable{
 					UpdateFlag = true;
 					OperationCount++;
 					dataEntity.update(str);
-//					JSONObject inObject = new JSONObject(str);
-//					String name = inObject.getString("name");
-//					int phone = inObject.getInt("phone");
-//					if(connector.testInsert(name, phone)){
-//						logger.info(socket.getInetAddress()+" insert successfully");
-//						JSONObject outObject = new JSONObject();
-//						outObject.put("status", 1);
-//						outObject.put("result", "insert successfully");
-//						out.print(outObject.toString()+"\n");
-//						out.flush();
-//					}else {
-//						logger.info(socket.getInetAddress()+" insert failed");
-//						JSONObject outObject = new JSONObject();
-//						outObject.put("status", 0);
-//						outObject.put("result", "insert failed");
-//						out.print(outObject.toString()+"\n");
-//						out.flush();
-//					}
 				}
 			}
 		} catch (Exception e) {
@@ -84,44 +69,44 @@ public class WorkerTwo implements Runnable{
 		}
 	}
 	private class TimerUpdate extends TimerTask {
-		private String ret;
-
 		@Override
 		public void run(){
-			if (connector == null) {
-				logger.severe("connector is missing");
+			if (dao == null) {
+				logger.severe("dao is missing");
 				return;
 			}else if(!UpdateFlag){
 				return;
 			}else {
 				try {
-					ret = connector.getConnect(dataEntity.toString());
+					if (!dao.updateEntity(dataEntity.data, IPAddress)) {
+						logger.severe("Update failed");
+					}
 				} catch (Exception e) {
 					logger.severe(e.getMessage());
 				}
 			}
 			UpdateFlag = false;
-			output();
+//			output();
 		}
-		public void output() {
-			if (out != null) {
-				logger.severe("socket is disconnected");
-				return;
-			}else {
-				if (ret != null && !ret.equals("")) {
-					JSONObject outjJsonObject = new JSONObject(ret);
-					int result = outjJsonObject.getInt("status");
-					String connectObject = outjJsonObject.getString("connectObject");
-					if (result == 1) {
-						logger.info(socket.getInetAddress()+" connect with "+connectObject);  //连线成功
-					}
-					out.print(ret+"\n");
-					out.flush();
-				}else {
-					return;
-				}
-			}
-		}
+//		public void output() {
+//			if (out != null) {
+//				logger.severe("socket is disconnected");
+//				return;
+//			}else {
+//				if (ret != null && !ret.equals("")) {
+//					JSONObject outjJsonObject = new JSONObject(ret);
+//					int result = outjJsonObject.getInt("status");
+//					String connectObject = outjJsonObject.getString("connectObject");
+//					if (result == 1) {
+//						logger.info(socket.getInetAddress()+" connect with "+connectObject);  //连线成功
+//					}
+//					out.print(ret+"\n");
+//					out.flush();
+//				}else {
+//					return;
+//				}
+//			}
+//		}
 		
 	}
 }

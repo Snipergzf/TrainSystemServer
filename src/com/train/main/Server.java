@@ -9,14 +9,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import com.train.communication.WorkerTwo;
 import com.train.config.Config;
-import com.train.database.Connector;
 
 /**
  * @author gzf
  *
  */
 public class Server {
-	private static Connector connector;
 	private static Logger logger;
 	private static ServerSocket serverSocket;
 	private static ThreadPoolExecutor executor;
@@ -24,7 +22,6 @@ public class Server {
 		logger = Logger.getLogger("TrainSystemServer");
 		logger.info("Server initializing...");
 		try {
-			connector = new Connector(logger);
 			serverSocket = new ServerSocket(Config.ServerPort);
 			executor = new ThreadPoolExecutor(Config.CorePoolSize, Config.MaximumPoolSize, Config.KeepAliveTime, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(12));
 			executor.allowCoreThreadTimeOut(false);
@@ -38,7 +35,7 @@ public class Server {
 				Socket clientSocket = serverSocket.accept();
 				logger.info("get a connection: "+clientSocket.getInetAddress());
 				try {
-					executor.execute(new WorkerTwo(clientSocket, connector, logger, clientSocket.getInetAddress().toString()));
+					executor.execute(new WorkerTwo(clientSocket, logger, clientSocket.getInetAddress().toString()));
 				} catch (Exception e) {
 					logger.severe(e.getMessage());
 					logger.info(clientSocket.getInetAddress()+" has closed");
