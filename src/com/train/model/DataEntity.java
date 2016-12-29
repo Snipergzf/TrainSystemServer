@@ -15,7 +15,11 @@ public class DataEntity {
 	private String modemType;
 	private String modemCarrierOutput;
 	public HashMap<String, String> data;
-	
+
+	public DataEntity() {
+		data = new HashMap<String, String>();
+	}
+
 	public String getiPAddress() {
 		return iPAddress;
 	}
@@ -80,16 +84,30 @@ public class DataEntity {
 		this.modemCarrierOutput = modemCarrierOutput;
 	}
 
-	public void update(String str){
+	public void update(String str) {
 		JSONObject updateJson;
 		if (str != null && !str.equals("")) {
 			updateJson = new JSONObject(str);
-			Iterator keys = updateJson.keys();
+			Iterator<?> keys = updateJson.keys();
 			while (keys.hasNext()) {
 				String key = (String) keys.next();
 				data.put(key, updateJson.getString(key));
 			}
 		}
 		updateJson = null;
+	}
+
+	public String toString() {
+		StringBuilder ret = new StringBuilder();
+		ret.append("modemSendDataRate=" + getModemSendDataRate() + ",");
+		ret.append("modemScrambleType=" + getModemScrambleType() + ",");
+		ret.append("modemDifferEncode=" + getModemDifferEncode() + ",");
+		ret.append("modemRSCode=" + getModemRSCode() + ",");
+		ret.append("modemConvoluCode=" + getModemConvoluCode() + ",");
+		ret.append("modemType=" + getModemType() + ",");
+		ret.append("modemCarrierOutput=" + getModemCarrierOutput() + ",");
+		ret.deleteCharAt(ret.length() - 1);
+
+		return ret.toString();
 	}
 }
