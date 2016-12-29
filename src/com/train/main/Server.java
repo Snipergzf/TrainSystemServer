@@ -227,7 +227,7 @@ public class Server {
 			serverConsole.append("操作次数" + "\t");
 			serverConsole.append("\n");
 			try {
-				List<UserEntity> users = userEntityDao.queryUser();
+				List<UserEntity> users = userEntityDao.queryUser(inputString);
 				if (users != null && !users.isEmpty()) {
 					for (UserEntity user : users) {
 						String online;
