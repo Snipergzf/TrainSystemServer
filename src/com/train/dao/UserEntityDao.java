@@ -80,6 +80,17 @@ public class UserEntityDao {
 		return ret;
 	}
 
+	public boolean addOperationCount(String ipaddress) throws Exception {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		String sql = "UPDATE users SET operationcount = operationcount+1 WHERE ipaddress=?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, ipaddress);
+		return ptmt.execute();
+	}
+	
 	public void deleteUser() {
 
 	}

@@ -13,12 +13,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 import org.json.JSONObject;
-
-import sun.org.mozilla.javascript.internal.json.JsonParser;
-
 import com.train.config.Config;
 import com.train.dao.DataEntityDao;
+import com.train.dao.UserEntityDao;
 import com.train.model.DataEntity;
+import com.train.model.UserEntity;
 
 /**
  * @author gzf
@@ -29,11 +28,11 @@ public class WorkerTwo implements Runnable {
 	private BufferedReader in;
 	private PrintWriter out;
 	private Logger logger;
-	private int OperationCount = 0; // 操作次数统计
 	private DataEntity dataEntity;
 	private boolean UpdateFlag = false; // 改动数据标记位
 	private String IPAddress;
-	private DataEntityDao dao;
+	private DataEntityDao dataEntityDao;
+	private UserEntityDao userEntityDao;
 	private Thread updateThread;
 	private Lock lock;
 	private JSONObject inJson;
@@ -41,7 +40,8 @@ public class WorkerTwo implements Runnable {
 
 	public WorkerTwo(Socket s, Logger logger, String IPAddress)
 			throws IOException {
-		this.dao = new DataEntityDao();
+		this.dataEntityDao = new DataEntityDao();
+		this.userEntityDao = new UserEntityDao();
 		this.dataEntity = new DataEntity();
 		this.IPAddress = IPAddress;
 		this.socket = s;
@@ -67,7 +67,7 @@ public class WorkerTwo implements Runnable {
 					int requestType = inJson.getInt("type");
 					switch (requestType) {
 					case Config.UPDATE:
-						OperationCount++;
+						userEntityDao.addOperationCount(IPAddress);
 						dataEntity.update(str);
 						UpdateFlag = true;
 						break;
@@ -96,7 +96,7 @@ public class WorkerTwo implements Runnable {
 		@Override
 		public void run() {
 			while (true) {
-				if (dao == null) {
+				if (dataEntityDao == null) {
 					logger.severe("dao is missing");
 				}
 				try {
@@ -105,11 +105,11 @@ public class WorkerTwo implements Runnable {
 						UpdateFlag = false;
 					} else if (dataEntity.data != null
 							&& dataEntity.data.size() > 0) {
-						dao.updateEntity(dataEntity.data, IPAddress);
-						DataEntity connecterDataEntity = dao
+						dataEntityDao.updateEntity(dataEntity.data, IPAddress);
+						DataEntity connecterDataEntity = dataEntityDao
 								.queryEntity(IPAddress);
 						if (connecterDataEntity != null) {
-							List<DataEntity> connectedDataEntities = dao
+							List<DataEntity> connectedDataEntities = dataEntityDao
 									.queryEntity(dataEntity.data, IPAddress);
 							if (connectedDataEntities != null
 									&& connectedDataEntities.size() > 0) {
