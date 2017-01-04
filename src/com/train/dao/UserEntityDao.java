@@ -3,6 +3,7 @@ package com.train.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,29 @@ public class UserEntityDao {
 		ptmt.setInt(4, user.getConnectstatus());
 		ptmt.setString(5, user.getConnectwith());
 		ptmt.setInt(6, user.getOperationcount());
+
+		return ptmt.execute();
+	}
+	
+	public boolean addUser(String ipaddress) throws Exception {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		
+		deleteUser(ipaddress);
+		
+		String sql = "INSERT INTO users" + "(ipaddress,currentlogin,online,"
+				+ "connectstatus,operationcount)"
+				+ "VALUES(?,?,?,?,?)";
+
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+
+		ptmt.setString(1, ipaddress);
+		ptmt.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
+		ptmt.setInt(3, 1);
+		ptmt.setInt(4, 0);
+		ptmt.setInt(5, 0);
 
 		return ptmt.execute();
 	}
@@ -85,16 +109,37 @@ public class UserEntityDao {
 		if (conn == null) {
 			return false;
 		}
-		String sql = "UPDATE users SET operationcount = operationcount+1 WHERE ipaddress=?";
+		String sql = "UPDATE users SET operationcount=operationcount+1 WHERE ipaddress=?";
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		ptmt.setString(1, ipaddress);
+		return !ptmt.execute();
+	}
+	
+	public boolean deleteUser(String ipaddress) throws SQLException {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		String sql = "DELETE FROM users WHERE ipaddress = ?";
+		
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, ipaddress);
+		
+		return ptmt.execute();
+	}
+
+	public boolean offline(String ipaddress) throws Exception {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		String sql = "UPDATE users SET online=0 WHERE ipaddress = ?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, ipaddress);
+		
 		return ptmt.execute();
 	}
 	
-	public void deleteUser() {
-
-	}
-
 	public void updateUser() {
 
 	}

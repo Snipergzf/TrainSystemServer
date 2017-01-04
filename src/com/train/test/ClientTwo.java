@@ -24,7 +24,6 @@ public class ClientTwo implements Runnable{
 			inputStreamReader = new InputStreamReader(socket.getInputStream());
 			bufferedReader = new BufferedReader(inputStreamReader);
 			printWriter = new PrintWriter(socket.getOutputStream());
-			System.out.println("NetWork Is Established");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -36,13 +35,15 @@ public class ClientTwo implements Runnable{
 		try {
 			for (int j = 0; j < 10; j++) {
 				JSONObject out = new JSONObject();
-				out.put("name", name);
-				out.put("phone", 123456);
+				JSONObject message = new JSONObject();
+				message.put("MC_deviceId", "1");
+				out.put("status", 2);
+				out.put("message", message.toString());
 				printWriter.write(out.toString()+"\n");
 				printWriter.flush();
-				String message;
-				if((message = bufferedReader.readLine()) != null) {
-					System.out.println(message);
+				String message2;
+				if((message2 = bufferedReader.readLine()) != null) {
+					System.out.println(message2);
 				}
 			}
 			TimeUnit.SECONDS.sleep(15);
@@ -59,10 +60,12 @@ public class ClientTwo implements Runnable{
 	}
 	
 	public static void main(String[] args) {
-		for (int i=0; i<32; i++) {
-			Thread thread = new Thread(new ClientTwo(String.valueOf(i)));
-			thread.start();
-		}
+//		for (int i=0; i<32; i++) {
+//			Thread thread = new Thread(new ClientTwo(String.valueOf(i)));
+//			thread.start();
+//		}
+		Thread thread = new Thread(new ClientTwo("1"));
+		thread.start();
 	}
 }
 

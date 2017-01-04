@@ -1,0 +1,9 @@
+2017-01-04 12:39:31.698 [NAME: ID: IP:] [com.train.test.logTest:DEBUG 8] 我是logger, debug
+2017-01-04 12:39:31.702 [NAME: ID: IP:] [com.train.test.logTest:INFO 9] 我是logger, info
+2017-01-04 12:39:31.702 [NAME: ID: IP:] [com.train.test.logTest:WARN 10] 我是logger, warn
+2017-01-04 12:42:40.857 [NAME: ID: IP:] [com.train.test.logTest:DEBUG 8] 我是logger, debug
+2017-01-04 12:42:40.861 [NAME: ID: IP:] [com.train.test.logTest:INFO 9] 我是logger, info
+2017-01-04 12:42:40.861 [NAME: ID: IP:] [com.train.test.logTest:WARN 10] 我是logger, warn
+2017-01-04 12:47:09.724 [NAME: ID: IP:] [com.train.test.logTest:DEBUG 8] 我是logger, debug
+2017-01-04 12:47:09.728 [NAME: ID: IP:] [com.train.test.logTest:INFO 9] 我是logger, info
+2017-01-04 12:47:09.728 [NAME: ID: IP:] [com.train.test.logTest:WARN 10] 我是logger, warn

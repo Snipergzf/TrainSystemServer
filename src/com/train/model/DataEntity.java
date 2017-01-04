@@ -41,7 +41,7 @@ public class DataEntity {
 	private String MD_deModemType; // 解调 方式
 	private String MD_deModemReceiveCarrierFrequence;// 收载波频率
 	private String MD_frameType; // 成帧 类型
-	private String MD_inCarrierOutput; // 载波输出
+	private String MD_frameParam; // 载波输出
 	private String MD_frameSClockPhase; // 成帧 发时钟相位
 	private String MD_frameSServiceInterface; // 成帧 发勤务接口
 	private String MD_frameSDataClock; // 成帧 发数据时钟
@@ -315,14 +315,6 @@ public class DataEntity {
 		MD_frameType = mD_frameType;
 	}
 
-	public String getMD_inCarrierOutput() {
-		return MD_inCarrierOutput;
-	}
-
-	public void setMD_inCarrierOutput(String mD_inCarrierOutput) {
-		MD_inCarrierOutput = mD_inCarrierOutput;
-	}
-
 	public String getMD_frameSClockPhase() {
 		return MD_frameSClockPhase;
 	}
@@ -396,6 +388,14 @@ public class DataEntity {
 		this.data = data;
 	}
 
+	public String getMD_frameParam() {
+		return MD_frameParam;
+	}
+
+	public void setMD_frameParam(String mD_frameParam) {
+		MD_frameParam = mD_frameParam;
+	}
+
 	public void update(String str) {
 		JSONObject updateJson;
 		if (str != null && !str.equals("")) {
@@ -409,17 +409,17 @@ public class DataEntity {
 		updateJson = null;
 	}
 
-//	public String toString() {
-//		StringBuilder ret = new StringBuilder();
-//		ret.append("modemSendDataRate=" + getModemSendDataRate() + ",");
-//		ret.append("modemScrambleType=" + getModemScrambleType() + ",");
-//		ret.append("modemDifferEncode=" + getModemDifferEncode() + ",");
-//		ret.append("modemRSCode=" + getModemRSCode() + ",");
-//		ret.append("modemConvoluCode=" + getModemConvoluCode() + ",");
-//		ret.append("modemType=" + getModemType() + ",");
-//		ret.append("modemCarrierOutput=" + getModemCarrierOutput() + ",");
-//		ret.deleteCharAt(ret.length() - 1);
-//
-//		return ret.toString();
-//	}
+	// public String toString() {
+	// StringBuilder ret = new StringBuilder();
+	// ret.append("modemSendDataRate=" + getModemSendDataRate() + ",");
+	// ret.append("modemScrambleType=" + getModemScrambleType() + ",");
+	// ret.append("modemDifferEncode=" + getModemDifferEncode() + ",");
+	// ret.append("modemRSCode=" + getModemRSCode() + ",");
+	// ret.append("modemConvoluCode=" + getModemConvoluCode() + ",");
+	// ret.append("modemType=" + getModemType() + ",");
+	// ret.append("modemCarrierOutput=" + getModemCarrierOutput() + ",");
+	// ret.deleteCharAt(ret.length() - 1);
+	//
+	// return ret.toString();
+	// }
 }

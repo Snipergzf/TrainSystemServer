@@ -152,14 +152,17 @@ public class Server {
 		try {
 			while (true) {
 				Socket clientSocket = serverSocket.accept();
-				logger.info("get a connection: "
-						+ clientSocket.getInetAddress());
+				String ipaddress = clientSocket.getInetAddress().toString()
+						.substring(1);
+				logger.info("get a connection: " + ipaddress);
 				try {
+					userEntityDao.addUser(ipaddress);
 					executor.execute(new WorkerTwo(clientSocket, logger,
-							clientSocket.getInetAddress().toString()));
+							ipaddress));
 				} catch (Exception e) {
+					userEntityDao.deleteUser(ipaddress);
 					logger.severe(e.getMessage());
-					logger.info(clientSocket.getInetAddress() + " has closed");
+					logger.info(ipaddress + " has closed");
 					clientSocket.close();
 				}
 			}
@@ -244,8 +247,8 @@ public class Server {
 						} else {
 							connect = "不连通";
 						}
-						serverConsole.append(String.valueOf(user.getCurrentlogin())
-								+ "\t");
+						serverConsole.append(String.valueOf(user
+								.getCurrentlogin()) + "\t");
 						serverConsole.append(online + "\t\t");
 						serverConsole.append(connect + "\t\t");
 						serverConsole.append(user.getConnectwith() + "\t\t");

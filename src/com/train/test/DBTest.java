@@ -1,6 +1,7 @@
 package com.train.test;
 
 import com.train.dao.DataEntityDao;
+import com.train.dao.UserEntityDao;
 import com.train.model.DataEntity;
 
 public class DBTest {
@@ -28,7 +29,7 @@ public class DBTest {
 		dataEntity.setMD_frameSDataClock("123");
 		dataEntity.setMD_frameSServiceInterface("123");
 		dataEntity.setMD_frameType("123");
-		dataEntity.setMD_inCarrierOutput("123");
+		dataEntity.setMD_frameParam("123");
 		dataEntity.setMD_interfaceCodeType("13");
 		dataEntity.setMD_interfaceType("13");
 		dataEntity.setMD_modemCarrierOutput("123");
@@ -50,8 +51,13 @@ public class DBTest {
 		
 		
 		DataEntityDao dataEntityDao = new DataEntityDao();
+		UserEntityDao userEntityDao = new UserEntityDao();
 		try {
-			dataEntityDao.addEntity(dataEntity);
+//			dataEntityDao.addEntity(dataEntity);
+			for (int i = 0; i < 10; i++) {
+				userEntityDao.addOperationCount("127.0.0.1");
+			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
