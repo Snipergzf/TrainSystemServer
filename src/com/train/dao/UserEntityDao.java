@@ -137,10 +137,24 @@ public class UserEntityDao {
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		ptmt.setString(1, ipaddress);
 		
-		return ptmt.execute();
+		return !ptmt.execute();
 	}
 	
-	public void updateUser() {
-
+	public boolean updateConnectWith(String ipaddressSelf, String ipaddressConnectWith) throws Exception {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		String sql1 = "UPDATE users SET connectwith=? WHERE ipaddress = ?";
+		PreparedStatement ptmt1 = conn.prepareStatement(sql1);
+		ptmt1.setString(1, ipaddressConnectWith);
+		ptmt1.setString(2, ipaddressSelf);
+		ptmt1.execute();
+		
+		String sql2 = "UPDATE users SET connectwith=? WHERE ipaddress = ?";
+		PreparedStatement ptmt2 = conn.prepareStatement(sql2);
+		ptmt2.setString(1, ipaddressSelf);
+		ptmt2.setString(2, ipaddressConnectWith);
+		return !ptmt2.execute();
 	}
 }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import com.train.config.Config;
 import com.train.dao.DataEntityDao;
@@ -69,10 +69,12 @@ public class WorkerTwo implements Runnable {
 					case Config.UPDATE:
 						userEntityDao.addOperationCount(IPAddress);
 						dataEntity.update(dataJsonString);
+						logger.info(IPAddress +" UPDATE completed");
 						UpdateFlag = true;
 						break;
 					case Config.CHECK:
 						dataEntityDao.addEntity(IPAddress, dataJsonString);
+						logger.info(IPAddress +" CHECK completed");
 						break;
 					case Config.HEART:
 						break;
@@ -81,14 +83,14 @@ public class WorkerTwo implements Runnable {
 				lock.unlock();
 			}
 		} catch (Exception e) {
-			logger.severe(e.getMessage());
+			logger.error(e.getMessage());
 		} finally {
 			try {
 				socket.close();
 				userEntityDao.offline(IPAddress);
-				logger.info(IPAddress + " has closed");
+				logger.info("connection closed");
 			} catch (Exception e) {
-				logger.severe(e.getMessage());
+				logger.error(e.getMessage());
 			}
 		}
 	}
@@ -98,7 +100,7 @@ public class WorkerTwo implements Runnable {
 		public void run() {
 			while (true) {
 				if (dataEntityDao == null) {
-					logger.severe("dao is missing");
+					logger.error("dao is missing");
 				}
 				try {
 					lock.lock();
@@ -108,7 +110,6 @@ public class WorkerTwo implements Runnable {
 							&& dataEntity.data.size() > 0) {
 						if (dataEntityDao.updateEntity(dataEntity.data,
 								IPAddress)) { // 更新数据库data
-							logger.info("update successful");
 							List<DataEntity> connectDataEntities = dataEntityDao
 									.queryConnectEntity(IPAddress); // 查找与当前用户特定数据一致的用户
 							if (connectDataEntities != null
@@ -136,7 +137,7 @@ public class WorkerTwo implements Runnable {
 					lock.unlock();
 					Thread.sleep(4 * 1000);
 				} catch (Exception e) {
-					logger.severe(e.getMessage());
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -293,9 +294,9 @@ public class WorkerTwo implements Runnable {
 		return true;
 	}
 
-	public void output(String ipAddress) {
+	public void output(String ipAddress) throws Exception {
 		if (out != null) {
-			logger.severe("socket is disconnected");
+			logger.error("socket is disconnected");
 			return;
 		} else {
 			if (ipAddress != null && !ipAddress.trim().equals("")) {
@@ -304,6 +305,7 @@ public class WorkerTwo implements Runnable {
 				outJson.put("message", new JSONObject(ipAddress));
 				out.print(outJson.toString() + "\n");
 				out.flush();
+				userEntityDao.updateConnectWith(IPAddress, ipAddress);
 				logger.info(IPAddress + " connected with " + ipAddress);
 			} else {
 				return;
