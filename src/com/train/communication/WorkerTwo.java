@@ -198,7 +198,7 @@ public class WorkerTwo implements Runnable {
 				return false;
 			}
 			String s_modemType = self.getMD_modemType();
-			String c_deModemType = checker.getMD_deframeType();
+			String c_deModemType = checker.getMD_deModemType();
 			if (!s_modemType.equals(c_deModemType)) {
 				return false;
 			}
@@ -222,7 +222,7 @@ public class WorkerTwo implements Runnable {
 			if (!s_deModemDescrambleType.equals(c_modemScrambleType)) {
 				return false;
 			}
-			String s_deModemDifferEncode = self.getMD_deModemConvoluDecode();
+			String s_deModemDifferEncode = self.getMD_deModemDifferEncode();
 			String c_modemDifferEncode = checker.getMD_modemDifferEncode();
 			if (!s_deModemDifferEncode.equals(c_modemDifferEncode)) {
 				return false;
@@ -288,22 +288,24 @@ public class WorkerTwo implements Runnable {
 				return false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return false;
 		}
 		return true;
 	}
 
 	public void output(String ipAddress) throws Exception {
-		if (out != null) {
+		if (out == null) {
 			logger.error("socket is disconnected");
 			return;
 		} else {
 			if (ipAddress != null && !ipAddress.trim().equals("")) {
 				outJson = new JSONObject();
 				outJson.put("status", 1);
-				outJson.put("message", new JSONObject(ipAddress));
-				out.print(outJson.toString() + "\n");
+				JSONObject message = new JSONObject();
+				message.put("connectedIp", ipAddress);
+				outJson.put("message", message.toString());
+				out.println(outJson.toString());
 				out.flush();
 				userEntityDao.updateConnectWith(IPAddress, ipAddress);
 				logger.info(IPAddress + " connected with " + ipAddress);
