@@ -1,0 +1,194 @@
+
+2017-01-04 16:38:55.362 [com.train.main.Server:INFO 157] get a connection: 115.156.164.123
+2017-01-04 16:38:55.749 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 16:39:09.358 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 16:39:09.384 [115.156.164.123:INFO 91] connection closed
+2017-01-04 16:39:27.758 [com.train.main.Server:INFO 157] get a connection: 115.156.164.123
+2017-01-04 16:39:27.936 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 16:39:54.245 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 16:39:54.281 [115.156.164.123:INFO 91] connection closed
+2017-01-04 16:40:56.057 [com.train.main.Server:INFO 314] Server initializing...
+2017-01-04 16:41:51.625 [com.train.main.Server:INFO 315] Server initializing...
+2017-01-04 16:46:14.142 [com.train.main.Server:INFO 327] Server initializing...
+2017-01-04 17:08:59.554 [com.train.main.Server:INFO 337] Server initializing...
+2017-01-04 17:10:26.514 [com.train.main.Server:INFO 337] Server initializing...
+2017-01-04 17:11:05.551 [com.train.main.Server:INFO 338] Server initializing...
+2017-01-04 18:07:51.235 [com.train.main.Server:INFO 341] Server initializing...
+2017-01-04 18:09:55.204 [com.train.main.Server:INFO 341] Server initializing...
+2017-01-04 18:09:56.372 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:09:56.587 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:10:01.337 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:10:01.363 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:10:02.553 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:10:02.729 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:10:11.190 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:10:11.288 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:10:25.283 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:10:25.448 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:10:59.824 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:10:59.869 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:13:33.545 [com.train.main.Server:INFO 343] Server initializing...
+2017-01-04 18:13:35.359 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:13:35.594 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:13:58.091 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:13:58.130 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:14:46.184 [com.train.main.Server:INFO 343] Server initializing...
+2017-01-04 18:14:46.190 [com.train.main.Server:ERROR 140] Address already in use: JVM_Bind
+2017-01-04 18:14:47.353 [com.train.main.Server:ERROR 179] 
+2017-01-04 18:14:47.354 [com.train.main.Server:ERROR 349] 
+2017-01-04 18:14:58.824 [com.train.main.Server:INFO 343] Server initializing...
+2017-01-04 18:18:04.993 [com.train.main.Server:INFO 343] Server initializing...
+2017-01-04 18:19:34.061 [com.train.main.Server:INFO 348] Server initializing...
+2017-01-04 18:19:37.095 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:19:37.438 [115.156.164.123:ERROR 86] JSONObject["MC_deviceId"] not a string.
+2017-01-04 18:19:37.534 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:20:01.871 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:20:01.965 [115.156.164.123:ERROR 86] JSONObject["MC_deviceId"] not a string.
+2017-01-04 18:20:02.003 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:20:18.550 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:20:18.627 [115.156.164.123:ERROR 86] JSONObject["MC_deviceId"] not a string.
+2017-01-04 18:20:18.672 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:21:45.067 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:21:45.149 [115.156.164.123:ERROR 86] JSONObject["MC_groupRate"] not a string.
+2017-01-04 18:21:45.189 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:23:41.969 [com.train.main.Server:INFO 348] Server initializing...
+2017-01-04 18:23:41.976 [com.train.main.Server:ERROR 140] Address already in use: JVM_Bind
+2017-01-04 18:23:43.157 [com.train.main.Server:ERROR 179] 
+2017-01-04 18:23:43.157 [com.train.main.Server:ERROR 354] 
+2017-01-04 18:23:55.604 [com.train.main.Server:INFO 348] Server initializing...
+2017-01-04 18:24:07.200 [com.train.main.Server:INFO 348] Server initializing...
+2017-01-04 18:24:12.597 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:24:12.709 [115.156.164.123:ERROR 86] JSONObject["message"] not a string.
+2017-01-04 18:24:12.813 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:26:23.172 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:26:23.343 [115.156.164.123:ERROR 86] A JSONObject text must begin with '{' at 1 [character 2 line 1]
+2017-01-04 18:26:23.395 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:29:44.757 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:29:44.983 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:29:58.188 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:29:58.226 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:30:19.090 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:30:19.429 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:30:39.349 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:30:39.432 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:30:52.766 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:30:56.824 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:30:56.859 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:31:19.663 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:31:47.352 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:31:47.380 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:31:51.402 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:32:08.913 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:32:08.941 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:32:09.160 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:32:12.691 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:32:12.742 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:36:09.490 [com.train.main.Server:INFO 348] Server initializing...
+2017-01-04 18:36:13.373 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:37:15.565 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:37:15.758 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:37:34.402 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:37:34.435 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:37:35.900 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:37:35.903 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:37:58.923 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:37:59.257 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:38:21.684 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:38:21.717 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:38:35.149 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:38:35.459 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:38:42.995 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:38:43.026 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:39:49.338 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:39:49.516 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:39:56.133 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:39:56.167 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:41:38.300 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:41:38.487 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:48:43.016 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:48:43.284 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:50:32.096 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:50:32.129 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:58:34.171 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:59:03.558 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:59:39.249 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:59:39.522 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:59:39.555 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:59:44.927 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:59:44.932 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:59:46.411 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:59:46.415 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:59:48.019 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 18:59:48.023 [115.156.164.123:INFO 91] connection closed
+2017-01-04 18:59:49.659 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 18:59:49.848 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 18:59:49.881 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:00:16.259 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:00:16.426 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:00:16.459 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:00:44.166 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:00:44.387 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:00:44.429 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:01:23.208 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:01:23.492 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:01:23.525 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:03:00.056 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:03:08.658 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:03:08.686 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:03:41.422 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:04:26.920 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:04:26.954 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:04:44.412 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:04:44.664 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:04:50.735 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:04:50.764 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:07:26.949 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:07:27.148 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:15:44.786 [com.train.main.Server:INFO 354] Server initializing...
+2017-01-04 19:18:16.391 [com.train.main.Server:INFO 355] Server initializing...
+2017-01-04 19:21:01.491 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:21:01.695 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:21:14.531 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:21:14.564 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:21:39.431 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:21:39.784 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:21:44.473 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:21:44.509 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:28:51.319 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:28:51.505 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:28:56.507 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:28:56.540 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:29:15.089 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:29:15.350 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:29:24.259 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:29:24.301 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:36:18.892 [com.train.main.Server:INFO 389] Server initializing...
+2017-01-04 19:37:47.476 [com.train.main.Server:INFO 389] Server initializing...
+2017-01-04 19:38:20.602 [com.train.main.Server:INFO 389] Server initializing...
+2017-01-04 19:39:17.493 [com.train.main.Server:INFO 391] Server initializing...
+2017-01-04 19:45:22.241 [com.train.main.Server:INFO 391] Server initializing...
+2017-01-04 19:45:27.482 [com.train.main.Server:INFO 391] Server initializing...
+2017-01-04 19:45:40.131 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:45:40.421 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:46:46.759 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:46:46.803 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:52:25.249 [com.train.main.Server:INFO 391] Server initializing...
+2017-01-04 19:53:42.981 [com.train.main.Server:INFO 165] get a connection: 115.156.164.123
+2017-01-04 19:53:43.207 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:53:45.925 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:53:45.957 [115.156.164.123:INFO 91] connection closed
+2017-01-04 19:56:19.318 [com.train.main.Server:INFO 389] Server initializing...
+2017-01-04 19:56:41.048 [com.train.main.Server:INFO 163] get a connection: 115.156.164.37
+2017-01-04 19:56:41.210 [115.156.164.37:INFO 77] 115.156.164.37 CHECK completed
+2017-01-04 19:56:56.646 [com.train.main.Server:INFO 163] get a connection: 115.156.164.123
+2017-01-04 19:56:56.837 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 19:59:30.771 [115.156.164.123:ERROR 86] Connection reset
+2017-01-04 19:59:30.820 [115.156.164.123:INFO 91] connection closed
+2017-01-04 20:01:04.050 [com.train.main.Server:INFO 163] get a connection: 115.156.164.123
+2017-01-04 20:01:04.264 [115.156.164.123:INFO 77] 115.156.164.123 CHECK completed
+2017-01-04 20:04:59.556 [115.156.164.123:INFO 72] 115.156.164.123 UPDATE completed
+2017-01-04 20:05:10.582 [115.156.164.123:INFO 72] 115.156.164.123 UPDATE completed
+2017-01-04 20:13:20.178 [115.156.164.123:INFO 72] 115.156.164.123 UPDATE completed
+2017-01-04 20:13:28.420 [115.156.164.123:INFO 72] 115.156.164.123 UPDATE completed
+2017-01-04 20:16:47.184 [115.156.164.123:INFO 72] 115.156.164.123 UPDATE completed
+2017-01-04 20:16:48.818 [115.156.164.123:INFO 72] 115.156.164.123 UPDATE completed
