@@ -353,12 +353,12 @@ public class DataEntityDao {
 		if (conn == null) {
 			return false;
 		}
-		String sql = "DELETE FROM  data WHERE ipaddress=?";
+		String sql = "DELETE FROM data WHERE ipaddress=?";
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		ptmt.setString(1, ipAddress);
 		return ptmt.execute();
 	}
-
+	
 	/*public List<DataEntity> queryEntity() throws Exception {
 		Connection conn = DBUtil.getConnection();
 		List<DataEntity> ret = new ArrayList<DataEntity>();

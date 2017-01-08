@@ -3,7 +3,6 @@ package com.train.main;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -17,12 +16,14 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import org.apache.log4j.Logger;
+import com.train.View.InsertConnectNodeFrame;
 import com.train.communication.WorkerTwo;
 import com.train.config.Config;
 import com.train.dao.DataEntityDao;
@@ -35,6 +36,7 @@ import com.train.model.UserEntity;
  * @author gzf
  * 
  */
+
 public class Server {
 	private static Logger logger;
 	private ServerSocket serverSocket;
@@ -43,7 +45,9 @@ public class Server {
 	private JPanel j1;
 	private JButton personalButton;
 	private JButton onlineButton;
-	private JTextArea inputHint;
+	private JButton connSelectButton;
+	private JButton aerialParamButton;
+	private JLabel inputHint;
 	private JTextField inputField;
 	private JButton queryButton;
 	private JButton refreshButton;
@@ -53,20 +57,25 @@ public class Server {
 	private DataEntityDao dataEntityDao;
 	private static String STATUS = "INIT";
 	private static String WINDOW = "ONLINE";
-
+	private Thread refreshThread;
+	@SuppressWarnings("unused")
+	private InsertConnectNodeFrame insertConnectNodeFrame;
+	
 	public void init() throws Exception {
 		initNetWork();
 		newUtil();
+		refreshThread = new Thread(new auto_refresh());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		inputHint.setText("请输入查询IP");
+		inputHint.setText("   请输入查询IP");
 		inputHint.setFont(new Font("宋体", Font.BOLD, 12));
-		inputHint.setMargin(new Insets(3, 4, 1, 2));
 		inputField.addKeyListener(new MyAdapter());
 		inputField.setFont(new Font("宋体", Font.PLAIN, 12));
 		queryButton.addActionListener(new inputListener());
 		refreshButton.addActionListener(new refreshListener());
 		onlineButton.addActionListener(new onLineListener());
 		personalButton.addActionListener(new personalListener());
+		connSelectButton.addActionListener(new connSelectListener());
+		connSelectButton.setFocusable(false);
 		serverConsole.setLineWrap(false);
 		serverConsole.setWrapStyleWord(true);
 		serverConsole.setEditable(false);
@@ -80,6 +89,8 @@ public class Server {
 		frame.setLayout(gb);
 		frame.add(onlineButton);
 		frame.add(personalButton);
+		frame.add(connSelectButton);
+		frame.add(aerialParamButton);
 		frame.add(j1);
 		frame.add(inputHint);
 		frame.add(inputField);
@@ -97,6 +108,14 @@ public class Server {
 		s.weightx = 0;
 		s.weighty = 0;
 		gb.setConstraints(personalButton, s);
+		s.gridwidth = 1;
+		s.weightx = 0;
+		s.weighty = 0;
+		gb.setConstraints(connSelectButton, s);
+		s.gridwidth = 1;
+		s.weightx = 0;
+		s.weighty = 0;
+		gb.setConstraints(aerialParamButton, s);
 		s.gridwidth = 0;
 		s.weightx = 0;
 		s.weighty = 0;
@@ -125,6 +144,7 @@ public class Server {
 		frame.setSize(800, 600);
 		frame.setVisible(true);
 		queryUsers();
+		refreshThread.start();
 	}
 
 	public void initNetWork() {
@@ -146,7 +166,9 @@ public class Server {
 		j1 = new JPanel();
 		onlineButton = new JButton("在线情况");
 		personalButton = new JButton("个人操作");
-		inputHint = new JTextArea();
+		connSelectButton = new JButton("配对选择");
+		aerialParamButton = new JButton("天线参数设置");
+		inputHint = new JLabel();
 		inputField = new JTextField();
 		queryButton = new JButton("查询");
 		refreshButton = new JButton("刷新");
@@ -186,7 +208,7 @@ public class Server {
 		List<UserEntity> users = userEntityDao.queryUser();
 		serverConsole.setText("\n\t");
 		serverConsole.append("IP地址" + "\t\t");
-		serverConsole.append("上线时间" + "\t\t\t");
+		serverConsole.append("上线时间" + "\t\t");
 		serverConsole.append("在线情况" + "\t\t");
 		serverConsole.append("连接情况" + "\t\t");
 		serverConsole.append("连接对象" + "\t\t");
@@ -204,7 +226,7 @@ public class Server {
 			if (inputString != null && !inputString.equals("")) {
 				serverConsole.setText("\n\t");
 				serverConsole.append("IP地址" + "\t\t");
-				serverConsole.append("上线时间" + "\t\t\t");
+				serverConsole.append("上线时间" + "\t\t");
 				serverConsole.append("在线情况" + "\t\t");
 				serverConsole.append("连接情况" + "\t\t");
 				serverConsole.append("连接对象" + "\t\t");
@@ -336,25 +358,49 @@ public class Server {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			try {
-				switch (STATUS) {
-				case "INIT":
-					queryUsers();
-					break;
-				case "QUERYUSERS":
-					queryUsers();
-					break;
-				case "QUERYUSER":
-					
-					queryUser();
-					break;
-				}
-			} catch (Exception e2) {
-				logger.error(e2.getMessage());
-			}
-			
+			refresh();
 		}
 	}
+	
+	public class connSelectListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			insertConnectNodeFrame = new InsertConnectNodeFrame(logger);
+		}
+	}
+	
+	public void refresh() {
+		try {
+			switch (STATUS) {
+			case "INIT":
+				queryUsers();
+				break;
+			case "QUERYUSERS":
+				queryUsers();
+				break;
+			case "QUERYUSER":
+				queryUser();
+				break;
+			}
+		} catch (Exception e2) {
+			logger.error(e2.getMessage());
+		}
+	}
+	
+	public class auto_refresh implements Runnable {
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					Thread.sleep(15*1000);
+					refresh();
+				}
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
+			}
+		}
+	} 
 	
 	public class personalListener implements ActionListener {
 

@@ -8,13 +8,13 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import com.train.config.Config;
 import com.train.dao.DataEntityDao;
+import com.train.dao.IpEntityDao;
 import com.train.dao.UserEntityDao;
 import com.train.model.DataEntity;
 
@@ -32,6 +32,7 @@ public class WorkerTwo implements Runnable {
 	private String IPAddress;
 	private DataEntityDao dataEntityDao;
 	private UserEntityDao userEntityDao;
+	private IpEntityDao ipEntityDao;
 	private Thread updateThread;
 	private Lock lock;
 	private JSONObject inJson;
@@ -41,6 +42,7 @@ public class WorkerTwo implements Runnable {
 			throws IOException {
 		this.dataEntityDao = new DataEntityDao();
 		this.userEntityDao = new UserEntityDao();
+		this.ipEntityDao = new IpEntityDao();
 		this.dataEntity = new DataEntity();
 		this.IPAddress = IPAddress;
 		this.socket = s;
@@ -98,19 +100,21 @@ public class WorkerTwo implements Runnable {
 	private class UpdateThread implements Runnable {
 		@Override
 		public void run() {
+			//隔4秒检查更新情况，如果有数据则更新；不管有无更新数据都进行连接检查
 			while (true) {
 				if (dataEntityDao == null) {
 					logger.error("dao is missing");
 				}
 				try {
 					lock.lock();
-					if (UpdateFlag) {
+					if (UpdateFlag) {//无数据更新
 						UpdateFlag = false;
+						checkConnected(IPAddress);
 					} else if (dataEntity.data != null
-							&& dataEntity.data.size() > 0) {
+							&& dataEntity.data.size() > 0) {//有数据更新
 						if (dataEntityDao.updateEntity(dataEntity.data,
 								IPAddress)) { // 更新数据库data
-							List<DataEntity> connectDataEntities = dataEntityDao
+							/*List<DataEntity> connectDataEntities = dataEntityDao
 									.queryConnectEntity(IPAddress); // 查找与当前用户特定数据一致的用户
 							if (connectDataEntities != null
 									&& connectDataEntities.size() > 1) {
@@ -130,7 +134,7 @@ public class WorkerTwo implements Runnable {
 								if (count == 1) {
 									output(connectedIp);
 								}
-							}
+							}*/
 						}
 						dataEntity.data = new HashMap<String, String>(); // 清空data
 					}
@@ -143,8 +147,13 @@ public class WorkerTwo implements Runnable {
 		}
 	}
 
-	public boolean checkConnected(DataEntity self, DataEntity checker) {
+//	public boolean checkConnected(DataEntity self, DataEntity checker) {
+	public boolean checkConnected(String ipaddress) {
 		try {
+			DataEntity self = dataEntityDao.queryEntity(ipaddress);
+			String connipaddress = ipEntityDao.queryConn(ipaddress);
+			DataEntity checker = dataEntityDao.queryEntity(connipaddress);
+			
 			//设置设备编号
 			if (self.getMC_deviceId().equals(checker.getMC_deviceId())) {
 				return false;

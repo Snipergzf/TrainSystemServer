@@ -140,6 +140,7 @@ public class UserEntityDao {
 		return !ptmt.execute();
 	}
 	
+	//更新连接情况
 	public boolean updateConnectWith(String ipaddressSelf, String ipaddressConnectWith) throws Exception {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
@@ -150,13 +151,13 @@ public class UserEntityDao {
 		ptmt1.setString(1, ipaddressConnectWith);
 		ptmt1.setInt(2, 1);
 		ptmt1.setString(3, ipaddressSelf);
-		ptmt1.execute();
+		return !ptmt1.execute();
 		
-		String sql2 = "UPDATE users SET connectwith=?,connectstatus=? WHERE ipaddress = ?";
-		PreparedStatement ptmt2 = conn.prepareStatement(sql2);
-		ptmt2.setString(1, ipaddressSelf);
-		ptmt2.setInt(2, 1);
-		ptmt2.setString(3, ipaddressConnectWith);
-		return !ptmt2.execute();
+//		String sql2 = "UPDATE users SET connectwith=?,connectstatus=? WHERE ipaddress = ?";
+//		PreparedStatement ptmt2 = conn.prepareStatement(sql2);
+//		ptmt2.setString(1, ipaddressSelf);
+//		ptmt2.setInt(2, 1);
+//		ptmt2.setString(3, ipaddressConnectWith);
+//		return !ptmt2.execute();
 	}
 }

@@ -1,7 +1,8 @@
 package com.train.test;
 
-import com.train.dao.DataEntityDao;
-import com.train.dao.UserEntityDao;
+//import com.train.dao.DataEntityDao;
+import com.train.dao.IpEntityDao;
+//import com.train.dao.UserEntityDao;
 import com.train.model.DataEntity;
 
 public class DBTest {
@@ -50,16 +51,16 @@ public class DBTest {
 		dataEntity.setVC_synData("123");
 		
 		
-		DataEntityDao dataEntityDao = new DataEntityDao();
-		UserEntityDao userEntityDao = new UserEntityDao();
+//		DataEntityDao dataEntityDao = new DataEntityDao();
+//		UserEntityDao userEntityDao = new UserEntityDao();
+		IpEntityDao ipEntityDao = new IpEntityDao();
 		try {
 //			dataEntityDao.addEntity(dataEntity);
-			for (int i = 0; i < 10; i++) {
-				userEntityDao.addOperationCount("127.0.0.1");
-			}
-			
+//			for (int i = 0; i < 10; i++) {
+//				userEntityDao.addOperationCount("127.0.0.1");
+//			}
+			System.out.println(ipEntityDao.insertConnectNode(1, 2));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
