@@ -22,7 +22,7 @@ import com.train.model.DataEntity;
  * @author gzf
  * 
  */
-public class WorkerTwo implements Runnable {
+public class ComWorker implements Runnable {
 	private Socket socket;
 	private BufferedReader in;
 	private PrintWriter out;
@@ -38,7 +38,7 @@ public class WorkerTwo implements Runnable {
 	private JSONObject inJson;
 	private JSONObject outJson;
 
-	public WorkerTwo(Socket s, Logger logger, String IPAddress)
+	public ComWorker(Socket s, Logger logger, String IPAddress)
 			throws IOException {
 		this.dataEntityDao = new DataEntityDao();
 		this.userEntityDao = new UserEntityDao();

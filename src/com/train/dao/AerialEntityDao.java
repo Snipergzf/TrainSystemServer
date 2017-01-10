@@ -10,7 +10,36 @@ import com.train.database.DBUtil;
 import com.train.model.AerialEntity;
 
 public class AerialEntityDao {
-	public ArrayList<String> query() throws SQLException {
+	
+	//查询得到每个参数组ArrayList
+	public ArrayList<AerialEntity> queryEntityList() throws SQLException{
+		ArrayList<AerialEntity> ret = new ArrayList<>();
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return ret;
+		}
+		String sql = "SELECT * FROM aerialParams";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ResultSet rs = ptmt.executeQuery();
+		while (rs.next()) {
+			AerialEntity tmp = new AerialEntity();
+			tmp.setId(rs.getInt("id"));
+			tmp.setAerialName(rs.getString("aerialName"));
+			tmp.setAeWorkFre(rs.getString("aeWorkFre"));
+			tmp.setAePolarization(rs.getString("aePolarization"));
+			tmp.setReWorkStatus(rs.getString("reWorkStatus"));
+			tmp.setReOffsetFre(rs.getString("reOffsetFre"));
+			tmp.setReFre(rs.getString("reFre"));
+			tmp.setSateLongitude(rs.getString("sateLongitude"));
+			ret.add(tmp);
+		}
+		return ret;
+		
+	}
+	
+	
+	//查询得到每个卫星参数组的名字Arraylist
+	public ArrayList<String> queryNameList() throws SQLException {
 		ArrayList<String> ret = new ArrayList<>();
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
@@ -28,6 +57,7 @@ public class AerialEntityDao {
 		return ret;
 	}
 	
+	//根据卫星参数组名字查询该组参数
 	public AerialEntity query(String aerialName) throws SQLException {
 		AerialEntity ret = new AerialEntity();
 		Connection conn = DBUtil.getConnection();
@@ -51,6 +81,7 @@ public class AerialEntityDao {
 		return ret;
 	}
 	
+	//根据参数组的id查询该组参数
 	public AerialEntity query(int id) throws SQLException {
 		AerialEntity ret = new AerialEntity();
 		Connection conn = DBUtil.getConnection();
@@ -91,6 +122,7 @@ public class AerialEntityDao {
 		return ret;
 	}
 
+	//插入一个卫星参数组实体
 	public boolean insert(AerialEntity aerialEntity) throws SQLException {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
@@ -131,6 +163,7 @@ public class AerialEntityDao {
 		return !ptmt.execute();
 	}
 	
+	//根据参数组的名字删除该组参数
 	public boolean delete(String aerialName) throws SQLException{
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {

@@ -25,7 +25,7 @@ public class logTest {
 //		System.out.println(System.getProperty("myLog"));
 		try {
 			MDC.put("LOGIN_USER_IP", "127.0.1.0");
-			Logger consoleLogger = Logger.getLogger(logTest.class);
+//			Logger consoleLogger = Logger.getLogger(logTest.class);
 			Logger mylog = Logger.getLogger("mylog1");
 			Layout layout = new PatternLayout("%d{yyyy-MM-dd HH:mm:ss} [IP:%X{LOGIN_USER_IP}] [%c:%p %L] %m%n");
 			Appender appender = new DailyRollingFileAppender(layout, "./log/mylog1", "'.'yyyy-MM-dd");
