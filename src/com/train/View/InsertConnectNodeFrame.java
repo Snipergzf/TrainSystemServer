@@ -4,8 +4,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.apache.log4j.Logger;
-
-import com.train.Util.CommonUtil;
 import com.train.dao.AerialEntityDao;
 import com.train.dao.IpEntityDao;
 import java.awt.GridBagConstraints;
@@ -144,7 +142,6 @@ public class InsertConnectNodeFrame extends JFrame {
 	private JButton comfirm;
 	private JPanel left;
 	private JPanel right;
-	private JPanel line;
 	private IpEntityDao ipEntityDao;
 	private AerialEntityDao aerialEntityDao;
 	private HashMap<JComboBox<String>, Integer> search;
@@ -157,7 +154,6 @@ public class InsertConnectNodeFrame extends JFrame {
 	public InsertConnectNodeFrame(JFrame mainFrame, Logger logger) {
 		super("配置连接对象");
 		this.connFrame = this;
-		this.connFrame.setResizable(false);
 		this.connFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.mainFrame = mainFrame;
 		this.logger = logger;
@@ -183,7 +179,6 @@ public class InsertConnectNodeFrame extends JFrame {
 		addComponent(l27, f27, la14, l28, f28, la30, ae14);
 		addComponent(l29, f29, la15, l30, f30, la31, ae15);
 		addComponent(l31, f31, la16, l32, f32, la32, ae16);
-		connFrame.add(line);
 		connFrame.add(left);
 		connFrame.add(comfirm);
 		connFrame.add(right);
@@ -205,8 +200,6 @@ public class InsertConnectNodeFrame extends JFrame {
 		setConstrains(l29, f29, la15, l30, f30, la31, ae15);
 		setConstrains(l31, f31, la16, l32, f32, la32, ae16);
 
-		s.gridwidth = 0;
-		gb.setConstraints(line, s);
 		s.gridwidth = 4;
 		gb.setConstraints(left, s);
 		s.gridwidth = 1;
@@ -215,9 +208,6 @@ public class InsertConnectNodeFrame extends JFrame {
 		gb.setConstraints(right, s);
 
 		connFrame.setSize(600, 600);
-		//set frame to be created in center
-		int[] xy = CommonUtil.getCenterXY(connFrame);    
-		connFrame.setLocation(xy[0], xy[1]);
 		connFrame.setVisible(true);
 	}
 
@@ -230,12 +220,11 @@ public class InsertConnectNodeFrame extends JFrame {
 					"18号主机", "19号主机", "20号主机", "21号主机", "22号主机", "23号主机",
 					"24号主机", "25号主机", "26号主机", "27号主机", "28号主机", "29号主机",
 					"30号主机", "31号主机", "32号主机" };
-			
+			connFrame.setResizable(false);
 			comfirm = new JButton("更新配对");
 			comfirm.addActionListener(new UpdateListener());
 			left = new JPanel();
 			right = new JPanel();
-			line = new JPanel();
 			ipEntityDao = new IpEntityDao();
 			aerialEntityDao = new AerialEntityDao();
 			l1 = new JLabel("对象:");
@@ -372,7 +361,7 @@ public class InsertConnectNodeFrame extends JFrame {
 			la32 = new JLabel("天线参数选择：");
 			ArrayList<String> aerialBox_tmp = new ArrayList<>();
 			aerialBox_tmp.add("无");
-			ArrayList<String> res = aerialEntityDao.queryNameList();
+			ArrayList<String> res = aerialEntityDao.query();
 			if (res != null && !res.isEmpty()) {
 				for (String string : res) {
 					aerialBox_tmp.add(string);

@@ -23,10 +23,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import org.apache.log4j.Logger;
-import com.train.Util.CommonUtil;
-import com.train.View.ConfigAerialParamFrame;
 import com.train.View.InsertConnectNodeFrame;
-import com.train.communication.ComWorker;
+import com.train.communication.WorkerTwo;
 import com.train.config.Config;
 import com.train.dao.DataEntityDao;
 import com.train.dao.UserEntityDao;
@@ -60,6 +58,8 @@ public class Server {
 	private static String STATUS = "INIT";
 	private static String WINDOW = "ONLINE";
 	private Thread refreshThread;
+	@SuppressWarnings("unused")
+	private InsertConnectNodeFrame insertConnectNodeFrame;
 	
 	public void init() throws Exception {
 		initNetWork();
@@ -76,8 +76,6 @@ public class Server {
 		personalButton.addActionListener(new personalListener());
 		connSelectButton.addActionListener(new connSelectListener());
 		connSelectButton.setFocusable(false);
-		aerialParamButton.addActionListener(new configParamListener());
-		aerialParamButton.setFocusable(false);
 		serverConsole.setLineWrap(false);
 		serverConsole.setWrapStyleWord(true);
 		serverConsole.setEditable(false);
@@ -143,10 +141,7 @@ public class Server {
 		s.weighty = 1;
 		gb.setConstraints(jScrollPane, s);
 
-		frame.setSize(1200, 900);
-		//set frame to be created in center
-		int[] xy = CommonUtil.getCenterXY(frame);    
-        frame.setLocation(xy[0], xy[1]);
+		frame.setSize(800, 600);
 		frame.setVisible(true);
 		queryUsers();
 		refreshThread.start();
@@ -191,7 +186,7 @@ public class Server {
 				try {
 					userEntityDao.addUser(ipaddress);
 					MyLog myLog = new MyLog(ipaddress);
-					executor.execute(new ComWorker(clientSocket, myLog.getLogger(),
+					executor.execute(new WorkerTwo(clientSocket, myLog.getLogger(),
 							ipaddress));
 				} catch (Exception e) {
 					userEntityDao.deleteUser(ipaddress);
@@ -369,19 +364,9 @@ public class Server {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new InsertConnectNodeFrame(frame, logger);
+			insertConnectNodeFrame = new InsertConnectNodeFrame(frame, logger);
 			frame.setEnabled(false);
 		}
-	}
-	
-	public class configParamListener implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new ConfigAerialParamFrame(frame, logger);
-			frame.setEnabled(false);
-		}
-		
 	}
 	
 	public void refresh() {
