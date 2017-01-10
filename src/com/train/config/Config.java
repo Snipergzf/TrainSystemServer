@@ -15,5 +15,13 @@ public class Config {
 	public static final int CHECK = 1;
 	public static final int UPDATE = 2;
 	public static final int HEART = 4;
-	
+	// 天线参数
+	public static final String[] paramNames = {"序号", "参数组名", "卫星经度", "天线工作频段", "天线极化方式",
+			"接收机工作状态", "接收机频偏", "接收机频率" };
+	// 天线工作频段选择
+	public static final String[] workFreStrings = { "ku", "Ka" };
+	// 天线极化方式选择
+	public static final String[] polarizationStrings = { "水平", "垂直", "圆" };
+	// 接收机工作状态选择
+	public static final String[] workStatusStrings = { "工作", "中频自检" };
 }
