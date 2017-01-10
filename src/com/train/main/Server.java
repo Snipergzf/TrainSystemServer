@@ -66,7 +66,7 @@ public class Server {
 		newUtil();
 		refreshThread = new Thread(new auto_refresh());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		inputHint.setText("   请输入查询IP");
+		inputHint.setText("   请输入查询IP  ");
 		inputHint.setFont(new Font("宋体", Font.BOLD, 12));
 		inputField.addKeyListener(new MyAdapter());
 		inputField.setFont(new Font("宋体", Font.PLAIN, 12));
@@ -208,7 +208,7 @@ public class Server {
 		List<UserEntity> users = userEntityDao.queryUser();
 		serverConsole.setText("\n\t");
 		serverConsole.append("IP地址" + "\t\t");
-		serverConsole.append("上线时间" + "\t\t");
+		serverConsole.append("上线时间" + "\t\t\t");
 		serverConsole.append("在线情况" + "\t\t");
 		serverConsole.append("连接情况" + "\t\t");
 		serverConsole.append("连接对象" + "\t\t");
@@ -226,7 +226,7 @@ public class Server {
 			if (inputString != null && !inputString.equals("")) {
 				serverConsole.setText("\n\t");
 				serverConsole.append("IP地址" + "\t\t");
-				serverConsole.append("上线时间" + "\t\t");
+				serverConsole.append("上线时间" + "\t\t\t");
 				serverConsole.append("在线情况" + "\t\t");
 				serverConsole.append("连接情况" + "\t\t");
 				serverConsole.append("连接对象" + "\t\t");
@@ -324,8 +324,6 @@ public class Server {
 		serverConsole.append("\t解帧收勤务接口:\t"+dataEntity.getMD_deframeRServiceInterface()+"\n");
 		serverConsole.append("\t接口类型:\t"+dataEntity.getMD_interfaceType()+"\n");
 		serverConsole.append("\t接口码型:\t"+dataEntity.getMD_interfaceCodeType()+"\n");
-		
-		
 	}
 	
 
@@ -366,7 +364,8 @@ public class Server {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			insertConnectNodeFrame = new InsertConnectNodeFrame(logger);
+			insertConnectNodeFrame = new InsertConnectNodeFrame(frame, logger);
+			frame.setEnabled(false);
 		}
 	}
 	

@@ -3,13 +3,15 @@ package com.train.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.train.database.DBUtil;
 
 public class IpEntityDao {
 	// 插入指定的接连对象
-	public boolean insertConnectNode(int connectNum1, int connectNum2) throws Exception {
+	public boolean insertConnectNode(int connectNum1, int connectNum2)
+			throws Exception {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
 			return false;
@@ -27,7 +29,7 @@ public class IpEntityDao {
 		while (rs.next()) {
 			connectObject1 = rs.getString("ipaddress");
 		}
-		
+
 		ptmt.setInt(1, connectNum2);
 		rs = ptmt.executeQuery();
 		while (rs.next()) {
@@ -45,9 +47,33 @@ public class IpEntityDao {
 		ret2 = !ptmt.execute();
 		return ret1 && ret2;
 	}
-	
-	//清空所有连接对象
-	public boolean truncateConn() throws Exception{
+
+	// 清空所有连接对象
+	public boolean truncateAerialNum() throws Exception {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		String sql = "UPDATE connection SET aerialNum=0";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		return !ptmt.execute();
+	}
+
+	// 更新对象的卫星参数序号
+	public boolean updateAerialNum(int id, int aerialNum) throws SQLException {
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return false;
+		}
+		String sql = "UPDATE connection SET aerialNum=? WHERE id=?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setInt(1, aerialNum);
+		ptmt.setInt(2, id);
+		return !ptmt.execute();
+	}
+
+	// 清空所有连接对象
+	public boolean truncateConn() throws Exception {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
 			return false;
@@ -57,8 +83,8 @@ public class IpEntityDao {
 		ptmt.setString(1, "");
 		return !ptmt.execute();
 	}
-	
-	public ArrayList<Integer> queryConn() throws Exception{
+
+	public ArrayList<Integer> queryConn() throws Exception {
 		HashMap<Integer, Integer> ret = new HashMap<>(); // ret的size小于等于16
 		ArrayList<Integer> result = new ArrayList<>();
 		Connection conn = DBUtil.getConnection();
@@ -73,13 +99,13 @@ public class IpEntityDao {
 		ResultSet rs2;
 		String connipaddress;
 		int id;
-		for(int i = 1; i<33; i++){
-			if (!ret.containsKey(i) && !ret.containsValue(i)) { //如果ret的key和value中没有该id对应的对象
+		for (int i = 1; i < 33; i++) {
+			if (!ret.containsKey(i) && !ret.containsValue(i)) { // 如果ret的key和value中没有该id对应的对象
 				ptmt1.setInt(1, i);
 				rs1 = ptmt1.executeQuery();
 				while (rs1.next()) {
 					connipaddress = rs1.getString("connipaddress");
-					if (connipaddress != null && !connipaddress.equals("")) { //connipaddress不为空
+					if (connipaddress != null && !connipaddress.equals("")) { // connipaddress不为空
 						ptmt2.setString(1, connipaddress);
 						rs2 = ptmt2.executeQuery();
 						while (rs2.next()) {
@@ -90,27 +116,45 @@ public class IpEntityDao {
 				}
 			}
 		}
-		
+
 		for (Integer num1 : ret.keySet()) {
 			result.add(num1);
 			result.add(ret.get(num1));
 		}
 		return result;
 	}
-	//根据ip地址查询连接对象
+
+	// 根据ip地址查询连接对象
 	public String queryConn(String ipaddress) throws Exception {
 		String connipaddress = "";
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
 			return connipaddress;
 		}
-		String sql = "SELECT connipaddress FROM connection WHERE ipaddress=?"; 
+		String sql = "SELECT connipaddress FROM connection WHERE ipaddress=?";
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		ptmt.setString(1, ipaddress);
 		ResultSet rs = ptmt.executeQuery();
-		while(rs.next()){
+		while (rs.next()) {
 			connipaddress = rs.getString("connipaddress");
 		}
 		return connipaddress;
+	}
+
+	// 根据id查询aerialName,需要联表查询
+	public String queryAerialName(int id) throws SQLException {
+		String ret = "无";
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return ret;
+		}
+		String sql = "SELECT a.aerialName as aerialName FROM aerialParams a, connection b WHERE a.id=b.aerialNum AND b.id=?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setInt(1, id);
+		ResultSet rs = ptmt.executeQuery();
+		while (rs.next()) {
+			ret = rs.getString("aerialName");
+		}
+		return ret;
 	}
 }

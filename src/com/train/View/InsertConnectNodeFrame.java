@@ -4,22 +4,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.apache.log4j.Logger;
+import com.train.dao.AerialEntityDao;
 import com.train.dao.IpEntityDao;
-
-import sun.text.normalizer.VersionInfo;
-
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 
-public class InsertConnectNodeFrame {
+public class InsertConnectNodeFrame extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JLabel l1;
 	private JLabel l2;
 	private JLabel l3;
@@ -118,7 +121,7 @@ public class InsertConnectNodeFrame {
 	private JComboBox<String> f30;
 	private JComboBox<String> f31;
 	private JComboBox<String> f32;
-	
+
 	private JComboBox<String> ae1;
 	private JComboBox<String> ae2;
 	private JComboBox<String> ae3;
@@ -135,217 +138,69 @@ public class InsertConnectNodeFrame {
 	private JComboBox<String> ae14;
 	private JComboBox<String> ae15;
 	private JComboBox<String> ae16;
-	private JFrame connFrame;
+	private InsertConnectNodeFrame connFrame;
 	private JButton comfirm;
 	private JPanel left;
 	private JPanel right;
 	private IpEntityDao ipEntityDao;
+	private AerialEntityDao aerialEntityDao;
 	private HashMap<JComboBox<String>, Integer> search;
 	private ArrayList<Integer> InitData;
 	private Logger logger;
+	private GridBagConstraints s;
+	private GridBagLayout gb;
+	private JFrame mainFrame;
 
-	public InsertConnectNodeFrame(Logger logger) {
+	public InsertConnectNodeFrame(JFrame mainFrame, Logger logger) {
+		super("配置连接对象");
+		this.connFrame = this;
+		this.connFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.mainFrame = mainFrame;
 		this.logger = logger;
 		init();
-		GridBagLayout gb = new GridBagLayout();
+		gb = new GridBagLayout();
+		s = new GridBagConstraints();
+		s.fill = GridBagConstraints.BOTH;
 		connFrame.setLayout(gb);
+
 		addComponent(l1, f1, la1, l2, f2, la17, ae1);
 		addComponent(l3, f3, la2, l4, f4, la18, ae2);
 		addComponent(l5, f5, la3, l6, f6, la19, ae3);
 		addComponent(l7, f7, la4, l8, f8, la20, ae4);
-		addComponent(l9, f9, la6, l10, f10, la21, ae5);
-		
-		connFrame.add(l11);
-		connFrame.add(f11);
-		connFrame.add(la6);
-		connFrame.add(l12);
-		connFrame.add(f12);
-		connFrame.add(la22);
-		connFrame.add(l13);
-		connFrame.add(f13);
-		connFrame.add(la7);
-		connFrame.add(l14);
-		connFrame.add(f14);
-		connFrame.add(la23);
-		connFrame.add(l15);
-		connFrame.add(f15);
-		connFrame.add(la8);
-		connFrame.add(l16);
-		connFrame.add(f16);
-		connFrame.add(la24);
-		connFrame.add(l17);
-		connFrame.add(f17);
-		connFrame.add(la9);
-		connFrame.add(l18);
-		connFrame.add(f18);
-		connFrame.add(la25);
-		connFrame.add(l19);
-		connFrame.add(f19);
-		connFrame.add(la10);
-		connFrame.add(l20);
-		connFrame.add(f20);
-		connFrame.add(la26);
-		connFrame.add(l21);
-		connFrame.add(f21);
-		connFrame.add(la11);
-		connFrame.add(l22);
-		connFrame.add(f22);
-		connFrame.add(la27);
-		connFrame.add(l23);
-		connFrame.add(f23);
-		connFrame.add(la12);
-		connFrame.add(l24);
-		connFrame.add(f24);
-		connFrame.add(la28);
-		connFrame.add(l25);
-		connFrame.add(f25);
-		connFrame.add(la13);
-		connFrame.add(l26);
-		connFrame.add(f26);
-		connFrame.add(la29);
-		connFrame.add(l27);
-		connFrame.add(f27);
-		connFrame.add(la14);
-		connFrame.add(l28);
-		connFrame.add(f28);
-		connFrame.add(la30);
-		connFrame.add(l29);
-		connFrame.add(f29);
-		connFrame.add(la15);
-		connFrame.add(l30);
-		connFrame.add(f30);
-		connFrame.add(la31);
-		connFrame.add(l31);
-		connFrame.add(f31);
-		connFrame.add(la16);
-		connFrame.add(l32);
-		connFrame.add(f32);
-		connFrame.add(la32);
+		addComponent(l9, f9, la5, l10, f10, la21, ae5);
+		addComponent(l11, f11, la6, l12, f12, la22, ae6);
+		addComponent(l13, f13, la7, l14, f14, la23, ae7);
+		addComponent(l15, f15, la8, l16, f16, la24, ae8);
+		addComponent(l17, f17, la9, l18, f18, la25, ae9);
+		addComponent(l19, f19, la10, l20, f20, la26, ae10);
+		addComponent(l21, f21, la11, l22, f22, la27, ae11);
+		addComponent(l23, f23, la12, l24, f24, la28, ae12);
+		addComponent(l25, f25, la13, l26, f26, la29, ae13);
+		addComponent(l27, f27, la14, l28, f28, la30, ae14);
+		addComponent(l29, f29, la15, l30, f30, la31, ae15);
+		addComponent(l31, f31, la16, l32, f32, la32, ae16);
 		connFrame.add(left);
 		connFrame.add(comfirm);
 		connFrame.add(right);
 
-		GridBagConstraints s = new GridBagConstraints();
-		s.fill = GridBagConstraints.BOTH;
+		setConstrains(l1, f1, la1, l2, f2, la17, ae1);
+		setConstrains(l3, f3, la2, l4, f4, la18, ae2);
+		setConstrains(l5, f5, la3, l6, f6, la19, ae3);
+		setConstrains(l7, f7, la4, l8, f8, la20, ae4);
+		setConstrains(l9, f9, la5, l10, f10, la21, ae5);
+		setConstrains(l11, f11, la6, l12, f12, la22, ae6);
+		setConstrains(l13, f13, la7, l14, f14, la23, ae7);
+		setConstrains(l15, f15, la8, l16, f16, la24, ae8);
+		setConstrains(l17, f17, la9, l18, f18, la25, ae9);
+		setConstrains(l19, f19, la10, l20, f20, la26, ae10);
+		setConstrains(l21, f21, la11, l22, f22, la27, ae11);
+		setConstrains(l23, f23, la12, l24, f24, la28, ae12);
+		setConstrains(l25, f25, la13, l26, f26, la29, ae13);
+		setConstrains(l27, f27, la14, l28, f28, la30, ae14);
+		setConstrains(l29, f29, la15, l30, f30, la31, ae15);
+		setConstrains(l31, f31, la16, l32, f32, la32, ae16);
 
-		s.gridwidth = 1;
-		s.weightx = 0;
-		s.weighty = 0;
-		gb.setConstraints(l1, s);
-		gb.setConstraints(f1, s);
-		gb.setConstraints(l2, s);
-		gb.setConstraints(f2, s);
-		s.gridwidth = 0;
-		gb.setConstraints(la17, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l3, s);
-		gb.setConstraints(f3, s);
-		gb.setConstraints(l4, s);
-		// s.gridwidth = 0;
-		gb.setConstraints(f4, s);
-		s.gridwidth = 0;
-		gb.setConstraints(la18, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l5, s);
-		gb.setConstraints(f5, s);
-		gb.setConstraints(l6, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f6, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l7, s);
-		gb.setConstraints(f7, s);
-		gb.setConstraints(l8, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f8, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l9, s);
-		gb.setConstraints(f9, s);
-		gb.setConstraints(l10, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f10, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l11, s);
-		gb.setConstraints(f11, s);
-		gb.setConstraints(l12, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f12, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l13, s);
-		gb.setConstraints(f13, s);
-		gb.setConstraints(l14, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f14, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l15, s);
-		gb.setConstraints(f15, s);
-		gb.setConstraints(l16, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f16, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l17, s);
-		gb.setConstraints(f17, s);
-		gb.setConstraints(l18, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f18, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l19, s);
-		gb.setConstraints(f19, s);
-		gb.setConstraints(l20, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f20, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l21, s);
-		gb.setConstraints(f21, s);
-		gb.setConstraints(l22, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f22, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l23, s);
-		gb.setConstraints(f23, s);
-		gb.setConstraints(l24, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f24, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l25, s);
-		gb.setConstraints(f25, s);
-		gb.setConstraints(l26, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f26, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l27, s);
-		gb.setConstraints(f27, s);
-		gb.setConstraints(l28, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f28, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l29, s);
-		gb.setConstraints(f29, s);
-		gb.setConstraints(l30, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f30, s);
-
-		s.gridwidth = 1;
-		gb.setConstraints(l31, s);
-		gb.setConstraints(f31, s);
-		gb.setConstraints(l32, s);
-		s.gridwidth = 0;
-		gb.setConstraints(f32, s);
-
-		s.gridwidth = 2;
+		s.gridwidth = 4;
 		gb.setConstraints(left, s);
 		s.gridwidth = 1;
 		gb.setConstraints(comfirm, s);
@@ -357,240 +212,241 @@ public class InsertConnectNodeFrame {
 	}
 
 	public void init() {
-		search = new HashMap<>();
-		String[] selectItems = { "无", "1号主机", "2号主机", "3号主机", "4号主机", "5号主机", "6号主机", "7号主机", "8号主机", "9号主机", "10号主机",
-				"11号主机", "12号主机", "13号主机", "14号主机", "15号主机", "16号主机", "17号主机", "18号主机", "19号主机", "20号主机", "21号主机",
-				"22号主机", "23号主机", "24号主机", "25号主机", "26号主机", "27号主机", "28号主机", "29号主机", "30号主机", "31号主机", "32号主机" };
-		connFrame = new JFrame("配置连接对象");
-		comfirm = new JButton("更新配对");
-		comfirm.addActionListener(new UpdateListener());
-		left = new JPanel();
-		right = new JPanel();
-		ipEntityDao = new IpEntityDao();
-		l1 = new JLabel("对象:");
-		l2 = new JLabel("对象:");
-		l3 = new JLabel("对象:");
-		l4 = new JLabel("对象:");
-		l5 = new JLabel("对象:");
-		l6 = new JLabel("对象:");
-		l7 = new JLabel("对象:");
-		l8 = new JLabel("对象:");
-		l9 = new JLabel("对象:");
-		l10 = new JLabel("对象:");
-		l11 = new JLabel("对象:");
-		l12 = new JLabel("对象:");
-		l13 = new JLabel("对象:");
-		l14 = new JLabel("对象:");
-		l15 = new JLabel("对象:");
-		l16 = new JLabel("对象:");
-		l17 = new JLabel("对象:");
-		l18 = new JLabel("对象:");
-		l19 = new JLabel("对象:");
-		l20 = new JLabel("对象:");
-		l21 = new JLabel("对象:");
-		l22 = new JLabel("对象:");
-		l23 = new JLabel("对象:");
-		l24 = new JLabel("对象:");
-		l25 = new JLabel("对象:");
-		l26 = new JLabel("对象:");
-		l27 = new JLabel("对象:");
-		l28 = new JLabel("对象:");
-		l29 = new JLabel("对象:");
-		l30 = new JLabel("对象:");
-		l31 = new JLabel("对象:");
-		l32 = new JLabel("对象:");
-
-		SelectListener selectListener = new SelectListener();
-		f1 = new JComboBox<>(selectItems);
-		f2 = new JComboBox<>(selectItems);
-		f3 = new JComboBox<>(selectItems);
-		f4 = new JComboBox<>(selectItems);
-		f5 = new JComboBox<>(selectItems);
-		f6 = new JComboBox<>(selectItems);
-		f7 = new JComboBox<>(selectItems);
-		f8 = new JComboBox<>(selectItems);
-		f9 = new JComboBox<>(selectItems);
-		f10 = new JComboBox<>(selectItems);
-		f11 = new JComboBox<>(selectItems);
-		f12 = new JComboBox<>(selectItems);
-		f13 = new JComboBox<>(selectItems);
-		f14 = new JComboBox<>(selectItems);
-		f15 = new JComboBox<>(selectItems);
-		f16 = new JComboBox<>(selectItems);
-		f17 = new JComboBox<>(selectItems);
-		f18 = new JComboBox<>(selectItems);
-		f19 = new JComboBox<>(selectItems);
-		f20 = new JComboBox<>(selectItems);
-		f21 = new JComboBox<>(selectItems);
-		f22 = new JComboBox<>(selectItems);
-		f23 = new JComboBox<>(selectItems);
-		f24 = new JComboBox<>(selectItems);
-		f25 = new JComboBox<>(selectItems);
-		f26 = new JComboBox<>(selectItems);
-		f27 = new JComboBox<>(selectItems);
-		f28 = new JComboBox<>(selectItems);
-		f29 = new JComboBox<>(selectItems);
-		f30 = new JComboBox<>(selectItems);
-		f31 = new JComboBox<>(selectItems);
-		f32 = new JComboBox<>(selectItems);
-
-		f1.addActionListener(selectListener);
-		f2.addActionListener(selectListener);
-		f3.addActionListener(selectListener);
-		f4.addActionListener(selectListener);
-		f5.addActionListener(selectListener);
-		f6.addActionListener(selectListener);
-		f7.addActionListener(selectListener);
-		f8.addActionListener(selectListener);
-		f9.addActionListener(selectListener);
-		f10.addActionListener(selectListener);
-		f11.addActionListener(selectListener);
-		f12.addActionListener(selectListener);
-		f13.addActionListener(selectListener);
-		f14.addActionListener(selectListener);
-		f15.addActionListener(selectListener);
-		f16.addActionListener(selectListener);
-		f17.addActionListener(selectListener);
-		f18.addActionListener(selectListener);
-		f19.addActionListener(selectListener);
-		f20.addActionListener(selectListener);
-		f21.addActionListener(selectListener);
-		f22.addActionListener(selectListener);
-		f23.addActionListener(selectListener);
-		f24.addActionListener(selectListener);
-		f25.addActionListener(selectListener);
-		f26.addActionListener(selectListener);
-		f27.addActionListener(selectListener);
-		f28.addActionListener(selectListener);
-		f29.addActionListener(selectListener);
-		f30.addActionListener(selectListener);
-		f31.addActionListener(selectListener);
-		f32.addActionListener(selectListener);
-
-		la1 = new JLabel(" 连接 ");
-		la2 = new JLabel(" 连接 ");
-		la3 = new JLabel(" 连接 ");
-		la4 = new JLabel(" 连接 ");
-		la5 = new JLabel(" 连接 ");
-		la6 = new JLabel(" 连接 ");
-		la7 = new JLabel(" 连接 ");
-		la8 = new JLabel(" 连接 ");
-		la9 = new JLabel(" 连接 ");
-		la10 = new JLabel(" 连接 ");
-		la11 = new JLabel(" 连接 ");
-		la12 = new JLabel(" 连接 ");
-		la13 = new JLabel(" 连接 ");
-		la14 = new JLabel(" 连接 ");
-		la15 = new JLabel(" 连接 ");
-		la16 = new JLabel(" 连接 ");
-		la17 = new JLabel("天线参数选择：");
-		la18 = new JLabel("天线参数选择：");
-		la19 = new JLabel("天线参数选择：");
-		la20 = new JLabel("天线参数选择：");
-		la21 = new JLabel("天线参数选择：");
-		la22 = new JLabel("天线参数选择：");
-		la23 = new JLabel("天线参数选择：");
-		la24 = new JLabel("天线参数选择：");
-		la25 = new JLabel("天线参数选择：");
-		la26 = new JLabel("天线参数选择：");
-		la27 = new JLabel("天线参数选择：");
-		la28 = new JLabel("天线参数选择：");
-		la29 = new JLabel("天线参数选择：");
-		la30 = new JLabel("天线参数选择：");
-		la31 = new JLabel("天线参数选择：");
-		la32 = new JLabel("天线参数选择：");
-		String[] aerialBox = {"无"};
-		//查询天线参数
-		ae1 = new JComboBox<>(aerialBox);
-		ae2 = new JComboBox<>(aerialBox);
-		ae3 = new JComboBox<>(aerialBox);
-		ae4 = new JComboBox<>(aerialBox);
-		ae5 = new JComboBox<>(aerialBox);
-		ae6 = new JComboBox<>(aerialBox);
-		ae7 = new JComboBox<>(aerialBox);
-		ae8 = new JComboBox<>(aerialBox);
-		ae9 = new JComboBox<>(aerialBox);
-		ae10 = new JComboBox<>(aerialBox);
-		ae11 = new JComboBox<>(aerialBox);
-		ae12 = new JComboBox<>(aerialBox);
-		ae13 = new JComboBox<>(aerialBox);
-		ae14 = new JComboBox<>(aerialBox);
-		ae15 = new JComboBox<>(aerialBox);
-		ae16 = new JComboBox<>(aerialBox);
-		
-		
-		
 		try {
+			search = new HashMap<>();
+			String[] selectItems = { "无", "1号主机", "2号主机", "3号主机", "4号主机",
+					"5号主机", "6号主机", "7号主机", "8号主机", "9号主机", "10号主机", "11号主机",
+					"12号主机", "13号主机", "14号主机", "15号主机", "16号主机", "17号主机",
+					"18号主机", "19号主机", "20号主机", "21号主机", "22号主机", "23号主机",
+					"24号主机", "25号主机", "26号主机", "27号主机", "28号主机", "29号主机",
+					"30号主机", "31号主机", "32号主机" };
+			connFrame.setResizable(false);
+			comfirm = new JButton("更新配对");
+			comfirm.addActionListener(new UpdateListener());
+			left = new JPanel();
+			right = new JPanel();
+			ipEntityDao = new IpEntityDao();
+			aerialEntityDao = new AerialEntityDao();
+			l1 = new JLabel("对象:");
+			l2 = new JLabel("对象:");
+			l3 = new JLabel("对象:");
+			l4 = new JLabel("对象:");
+			l5 = new JLabel("对象:");
+			l6 = new JLabel("对象:");
+			l7 = new JLabel("对象:");
+			l8 = new JLabel("对象:");
+			l9 = new JLabel("对象:");
+			l10 = new JLabel("对象:");
+			l11 = new JLabel("对象:");
+			l12 = new JLabel("对象:");
+			l13 = new JLabel("对象:");
+			l14 = new JLabel("对象:");
+			l15 = new JLabel("对象:");
+			l16 = new JLabel("对象:");
+			l17 = new JLabel("对象:");
+			l18 = new JLabel("对象:");
+			l19 = new JLabel("对象:");
+			l20 = new JLabel("对象:");
+			l21 = new JLabel("对象:");
+			l22 = new JLabel("对象:");
+			l23 = new JLabel("对象:");
+			l24 = new JLabel("对象:");
+			l25 = new JLabel("对象:");
+			l26 = new JLabel("对象:");
+			l27 = new JLabel("对象:");
+			l28 = new JLabel("对象:");
+			l29 = new JLabel("对象:");
+			l30 = new JLabel("对象:");
+			l31 = new JLabel("对象:");
+			l32 = new JLabel("对象:");
+
+			SelectListener selectListener = new SelectListener();
+			f1 = new JComboBox<>(selectItems);
+			f2 = new JComboBox<>(selectItems);
+			f3 = new JComboBox<>(selectItems);
+			f4 = new JComboBox<>(selectItems);
+			f5 = new JComboBox<>(selectItems);
+			f6 = new JComboBox<>(selectItems);
+			f7 = new JComboBox<>(selectItems);
+			f8 = new JComboBox<>(selectItems);
+			f9 = new JComboBox<>(selectItems);
+			f10 = new JComboBox<>(selectItems);
+			f11 = new JComboBox<>(selectItems);
+			f12 = new JComboBox<>(selectItems);
+			f13 = new JComboBox<>(selectItems);
+			f14 = new JComboBox<>(selectItems);
+			f15 = new JComboBox<>(selectItems);
+			f16 = new JComboBox<>(selectItems);
+			f17 = new JComboBox<>(selectItems);
+			f18 = new JComboBox<>(selectItems);
+			f19 = new JComboBox<>(selectItems);
+			f20 = new JComboBox<>(selectItems);
+			f21 = new JComboBox<>(selectItems);
+			f22 = new JComboBox<>(selectItems);
+			f23 = new JComboBox<>(selectItems);
+			f24 = new JComboBox<>(selectItems);
+			f25 = new JComboBox<>(selectItems);
+			f26 = new JComboBox<>(selectItems);
+			f27 = new JComboBox<>(selectItems);
+			f28 = new JComboBox<>(selectItems);
+			f29 = new JComboBox<>(selectItems);
+			f30 = new JComboBox<>(selectItems);
+			f31 = new JComboBox<>(selectItems);
+			f32 = new JComboBox<>(selectItems);
+
+			f1.addActionListener(selectListener);
+			f2.addActionListener(selectListener);
+			f3.addActionListener(selectListener);
+			f4.addActionListener(selectListener);
+			f5.addActionListener(selectListener);
+			f6.addActionListener(selectListener);
+			f7.addActionListener(selectListener);
+			f8.addActionListener(selectListener);
+			f9.addActionListener(selectListener);
+			f10.addActionListener(selectListener);
+			f11.addActionListener(selectListener);
+			f12.addActionListener(selectListener);
+			f13.addActionListener(selectListener);
+			f14.addActionListener(selectListener);
+			f15.addActionListener(selectListener);
+			f16.addActionListener(selectListener);
+			f17.addActionListener(selectListener);
+			f18.addActionListener(selectListener);
+			f19.addActionListener(selectListener);
+			f20.addActionListener(selectListener);
+			f21.addActionListener(selectListener);
+			f22.addActionListener(selectListener);
+			f23.addActionListener(selectListener);
+			f24.addActionListener(selectListener);
+			f25.addActionListener(selectListener);
+			f26.addActionListener(selectListener);
+			f27.addActionListener(selectListener);
+			f28.addActionListener(selectListener);
+			f29.addActionListener(selectListener);
+			f30.addActionListener(selectListener);
+			f31.addActionListener(selectListener);
+			f32.addActionListener(selectListener);
+
+			la1 = new JLabel(" 连接 ");
+			la2 = new JLabel(" 连接 ");
+			la3 = new JLabel(" 连接 ");
+			la4 = new JLabel(" 连接 ");
+			la5 = new JLabel(" 连接 ");
+			la6 = new JLabel(" 连接 ");
+			la7 = new JLabel(" 连接 ");
+			la8 = new JLabel(" 连接 ");
+			la9 = new JLabel(" 连接 ");
+			la10 = new JLabel(" 连接 ");
+			la11 = new JLabel(" 连接 ");
+			la12 = new JLabel(" 连接 ");
+			la13 = new JLabel(" 连接 ");
+			la14 = new JLabel(" 连接 ");
+			la15 = new JLabel(" 连接 ");
+			la16 = new JLabel(" 连接 ");
+			la17 = new JLabel("天线参数选择：");
+			la18 = new JLabel("天线参数选择：");
+			la19 = new JLabel("天线参数选择：");
+			la20 = new JLabel("天线参数选择：");
+			la21 = new JLabel("天线参数选择：");
+			la22 = new JLabel("天线参数选择：");
+			la23 = new JLabel("天线参数选择：");
+			la24 = new JLabel("天线参数选择：");
+			la25 = new JLabel("天线参数选择：");
+			la26 = new JLabel("天线参数选择：");
+			la27 = new JLabel("天线参数选择：");
+			la28 = new JLabel("天线参数选择：");
+			la29 = new JLabel("天线参数选择：");
+			la30 = new JLabel("天线参数选择：");
+			la31 = new JLabel("天线参数选择：");
+			la32 = new JLabel("天线参数选择：");
+			ArrayList<String> aerialBox_tmp = new ArrayList<>();
+			aerialBox_tmp.add("无");
+			ArrayList<String> res = aerialEntityDao.query();
+			if (res != null && !res.isEmpty()) {
+				for (String string : res) {
+					aerialBox_tmp.add(string);
+				}
+			}
+			String[] aerialBox = new String[aerialBox_tmp.size()];
+			aerialBox = aerialBox_tmp.toArray(aerialBox);
+			ae1 = new JComboBox<>(aerialBox);
+			ae2 = new JComboBox<>(aerialBox);
+			ae3 = new JComboBox<>(aerialBox);
+			ae4 = new JComboBox<>(aerialBox);
+			ae5 = new JComboBox<>(aerialBox);
+			ae6 = new JComboBox<>(aerialBox);
+			ae7 = new JComboBox<>(aerialBox);
+			ae8 = new JComboBox<>(aerialBox);
+			ae9 = new JComboBox<>(aerialBox);
+			ae10 = new JComboBox<>(aerialBox);
+			ae11 = new JComboBox<>(aerialBox);
+			ae12 = new JComboBox<>(aerialBox);
+			ae13 = new JComboBox<>(aerialBox);
+			ae14 = new JComboBox<>(aerialBox);
+			ae15 = new JComboBox<>(aerialBox);
+			ae16 = new JComboBox<>(aerialBox);
 			InitData = ipEntityDao.queryConn();
+			if (InitData != null) {
+				int size = InitData.size();
+				if (size >= 2) {
+					initView(f1, f2, InitData.get(0), InitData.get(1), ae1);
+				}
+				if (size >= 4) {
+					initView(f3, f4, InitData.get(2), InitData.get(3), ae2);
+				}
+				if (size >= 6) {
+					initView(f5, f6, InitData.get(4), InitData.get(5), ae3);
+				}
+				if (size >= 8) {
+					initView(f7, f8, InitData.get(6), InitData.get(7), ae4);
+				}
+				if (size >= 10) {
+					initView(f9, f10, InitData.get(8), InitData.get(9), ae5);
+				}
+				if (size >= 12) {
+					initView(f11, f12, InitData.get(10), InitData.get(11), ae6);
+				}
+				if (size >= 14) {
+					initView(f13, f14, InitData.get(12), InitData.get(13), ae7);
+				}
+				if (size >= 16) {
+					initView(f15, f16, InitData.get(14), InitData.get(15), ae8);
+				}
+				if (size >= 18) {
+					initView(f17, f18, InitData.get(16), InitData.get(17), ae9);
+				}
+				if (size >= 20) {
+					initView(f19, f20, InitData.get(18), InitData.get(19), ae10);
+				}
+				if (size >= 22) {
+					initView(f21, f22, InitData.get(20), InitData.get(21), ae11);
+				}
+				if (size >= 24) {
+					initView(f23, f24, InitData.get(22), InitData.get(23), ae12);
+				}
+				if (size >= 26) {
+					initView(f25, f26, InitData.get(24), InitData.get(25), ae13);
+				}
+				if (size >= 28) {
+					initView(f27, f28, InitData.get(26), InitData.get(27), ae14);
+				}
+				if (size >= 30) {
+					initView(f29, f30, InitData.get(28), InitData.get(29), ae15);
+				}
+				if (size >= 32) {
+					initView(f31, f32, InitData.get(30), InitData.get(31), ae16);
+				}
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-		if (InitData != null) {
-			int size = InitData.size();
-			if (size >= 2) {
-				f1.setSelectedIndex(InitData.get(0));
-				f2.setSelectedIndex(InitData.get(1));
-			}
-			if (size >= 4) {
-				f3.setSelectedIndex(InitData.get(2));
-				f4.setSelectedIndex(InitData.get(3));
-			}
-			if (size >= 6) {
-				f5.setSelectedIndex(InitData.get(4));
-				f6.setSelectedIndex(InitData.get(5));
-			}
-			if (size >= 8) {
-				f7.setSelectedIndex(InitData.get(6));
-				f8.setSelectedIndex(InitData.get(7));
-			}
-			if (size >= 10) {
-				f9.setSelectedIndex(InitData.get(8));
-				f10.setSelectedIndex(InitData.get(9));
-			}
-			if (size >= 12) {
-				f11.setSelectedIndex(InitData.get(10));
-				f12.setSelectedIndex(InitData.get(11));
-			}
-			if (size >= 14) {
-				f13.setSelectedIndex(InitData.get(12));
-				f14.setSelectedIndex(InitData.get(13));
-			}
-			if (size >= 16) {
-				f15.setSelectedIndex(InitData.get(14));
-				f16.setSelectedIndex(InitData.get(15));
-			}
-			if (size >= 18) {
-				f17.setSelectedIndex(InitData.get(16));
-				f18.setSelectedIndex(InitData.get(17));
-			}
-			if (size >= 20) {
-				f19.setSelectedIndex(InitData.get(18));
-				f20.setSelectedIndex(InitData.get(19));
-			}
-			if (size >= 22) {
-				f21.setSelectedIndex(InitData.get(20));
-				f22.setSelectedIndex(InitData.get(21));
-			}
-			if (size >= 24) {
-				f23.setSelectedIndex(InitData.get(22));
-				f24.setSelectedIndex(InitData.get(23));
-			}
-			if (size >= 26) {
-				f25.setSelectedIndex(InitData.get(24));
-				f26.setSelectedIndex(InitData.get(25));
-			}
-			if (size >= 28) {
-				f27.setSelectedIndex(InitData.get(26));
-				f28.setSelectedIndex(InitData.get(27));
-			}
-			if (size >= 30) {
-				f29.setSelectedIndex(InitData.get(28));
-				f30.setSelectedIndex(InitData.get(29));
-			}
-			if (size >= 32) {
-				f31.setSelectedIndex(InitData.get(30));
-				f32.setSelectedIndex(InitData.get(31));
-			}
+	}
+
+	@Override
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			mainFrame.setEnabled(true);
+			this.connFrame.dispose();
 		}
 	}
 
@@ -601,10 +457,12 @@ public class InsertConnectNodeFrame {
 			@SuppressWarnings("unchecked")
 			JComboBox<String> tmp = (JComboBox<String>) e.getSource();
 			int index = tmp.getSelectedIndex();
-			if (!search.containsValue(index) || (search.containsKey(tmp) && search.get(tmp) == index)) {
+			if (!search.containsValue(index)
+					|| (search.containsKey(tmp) && search.get(tmp) == index)) {
 				search.put(tmp, index);
 			} else if (search.containsValue(index)) {
-				int res = JOptionPane.showConfirmDialog(null, "选择冲突,是否强制改变", "选择冲突", JOptionPane.YES_NO_OPTION);
+				int res = JOptionPane.showConfirmDialog(null, "选择冲突,是否强制改变",
+						"选择冲突", JOptionPane.YES_NO_OPTION);
 				if (res == JOptionPane.YES_OPTION) {
 					for (JComboBox<String> jComboBox : search.keySet()) {
 						if (search.get(jComboBox) == index) {
@@ -625,68 +483,103 @@ public class InsertConnectNodeFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			boolean result = updateData2();
+			boolean result = updateData();
 			if (result) {// 更新成功
-				JOptionPane.showMessageDialog(connFrame, "更新成功", "更新成功", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(connFrame, "更新成功", "更新成功",
+						JOptionPane.INFORMATION_MESSAGE);
+				mainFrame.setEnabled(true);
 				connFrame.dispose();
 			} else {// 更新不成功
-				JOptionPane.showMessageDialog(connFrame, "更新不成功，请查看日志检查具体错误", "更新失败", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(connFrame, "更新不成功，请查看日志检查具体错误",
+						"更新失败", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
 
-	private boolean updateData2() {
+	private boolean updateData() {
 		boolean ret = true;
 		try {
-			ipEntityDao.truncateConn();
-			if (f1.getSelectedIndex() != 0 && f2.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f1.getSelectedIndex(), f2.getSelectedIndex());
-			}
-			if (f3.getSelectedIndex() != 0 && f4.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f3.getSelectedIndex(), f4.getSelectedIndex());
-			}
-			if (f5.getSelectedIndex() != 0 && f6.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f5.getSelectedIndex(), f6.getSelectedIndex());
-			}
-			if (f7.getSelectedIndex() != 0 && f8.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f7.getSelectedIndex(), f8.getSelectedIndex());
-			}
-			if (f9.getSelectedIndex() != 0 && f10.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f9.getSelectedIndex(), f10.getSelectedIndex());
-			}
-			if (f11.getSelectedIndex() != 0 && f12.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f11.getSelectedIndex(), f12.getSelectedIndex());
-			}
-			if (f13.getSelectedIndex() != 0 && f14.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f13.getSelectedIndex(), f14.getSelectedIndex());
-			}
-			if (f15.getSelectedIndex() != 0 && f16.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f15.getSelectedIndex(), f16.getSelectedIndex());
-			}
-			if (f17.getSelectedIndex() != 0 && f18.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f17.getSelectedIndex(), f18.getSelectedIndex());
-			}
-			if (f19.getSelectedIndex() != 0 && f20.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f19.getSelectedIndex(), f20.getSelectedIndex());
-			}
-			if (f21.getSelectedIndex() != 0 && f22.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f21.getSelectedIndex(), f22.getSelectedIndex());
-			}
-			if (f23.getSelectedIndex() != 0 && f24.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f23.getSelectedIndex(), f24.getSelectedIndex());
-			}
-			if (f25.getSelectedIndex() != 0 && f26.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f25.getSelectedIndex(), f26.getSelectedIndex());
-			}
-			if (f27.getSelectedIndex() != 0 && f28.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f27.getSelectedIndex(), f28.getSelectedIndex());
-			}
-			if (f29.getSelectedIndex() != 0 && f30.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f29.getSelectedIndex(), f30.getSelectedIndex());
-			}
-			if (f31.getSelectedIndex() != 0 && f32.getSelectedIndex() != 0) {
-				ipEntityDao.insertConnectNode(f31.getSelectedIndex(), f32.getSelectedIndex());
-			}
+			ipEntityDao.truncateConn(); // 清空所有连接对象，严格地讲这个操作应该与后面的更新操作一起写成一个过程，保持原子性，可以留作优化；
+			ipEntityDao.truncateAerialNum(); // 清空所有连接对对应的卫星参数序号，严格地讲这个操作应该与后面的更新操作一起写成一个过程，保持原子性，可以留作优化；
+			int tmp1 = f1.getSelectedIndex();
+			int tmp2 = f2.getSelectedIndex();
+			String selectItem = (String) ae1.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f3.getSelectedIndex();
+			tmp2 = f4.getSelectedIndex();
+			selectItem = (String) ae2.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f5.getSelectedIndex();
+			tmp2 = f6.getSelectedIndex();
+			selectItem = (String) ae3.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f7.getSelectedIndex();
+			tmp2 = f8.getSelectedIndex();
+			selectItem = (String) ae4.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f9.getSelectedIndex();
+			tmp2 = f10.getSelectedIndex();
+			selectItem = (String) ae5.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f11.getSelectedIndex();
+			tmp2 = f12.getSelectedIndex();
+			selectItem = (String) ae6.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f13.getSelectedIndex();
+			tmp2 = f14.getSelectedIndex();
+			selectItem = (String) ae7.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f15.getSelectedIndex();
+			tmp2 = f16.getSelectedIndex();
+			selectItem = (String) ae8.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f17.getSelectedIndex();
+			tmp2 = f18.getSelectedIndex();
+			selectItem = (String) ae9.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f19.getSelectedIndex();
+			tmp2 = f20.getSelectedIndex();
+			selectItem = (String) ae10.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f21.getSelectedIndex();
+			tmp2 = f22.getSelectedIndex();
+			selectItem = (String) ae11.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f23.getSelectedIndex();
+			tmp2 = f24.getSelectedIndex();
+			selectItem = (String) ae12.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f25.getSelectedIndex();
+			tmp2 = f26.getSelectedIndex();
+			selectItem = (String) ae13.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f27.getSelectedIndex();
+			tmp2 = f28.getSelectedIndex();
+			selectItem = (String) ae14.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f29.getSelectedIndex();
+			tmp2 = f30.getSelectedIndex();
+			selectItem = (String) ae15.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
+
+			tmp1 = f31.getSelectedIndex();
+			tmp2 = f32.getSelectedIndex();
+			selectItem = (String) ae16.getSelectedItem();
+			updateConn(tmp1, tmp2, selectItem);
 		} catch (Exception e) {
 			ret = false;
 			logger.error(e.getMessage());
@@ -694,8 +587,31 @@ public class InsertConnectNodeFrame {
 		return ret;
 	}
 
-	@SuppressWarnings("unchecked")
-	private void addComponent(JLabel comp1, JComboBox<String> comp2, JLabel comp3, JLabel comp4, JComboBox<String> comp5, JLabel comp6, JComboBox<String> comp7) {
+	private void initView(JComboBox<String> conn1, JComboBox<String> conn2,
+			int index1, int index2, JComboBox<String> aerial)
+			throws SQLException {
+		conn1.setSelectedIndex(index1);
+		conn2.setSelectedIndex(index2);
+		aerial.setSelectedItem(ipEntityDao.queryAerialName(index1));
+	}
+
+	private void updateConn(int tmp1, int tmp2, String selectItem)
+			throws Exception {
+		if (tmp1 != 0 && tmp2 != 0) {
+			ipEntityDao.insertConnectNode(tmp1, tmp2);
+			if (!selectItem.equals("无")) {
+				int tmp3 = aerialEntityDao.queryId(selectItem);
+				if (tmp3 != -1) {
+					ipEntityDao.updateAerialNum(tmp1, tmp3);
+					ipEntityDao.updateAerialNum(tmp2, tmp3);
+				}
+			}
+		}
+	}
+
+	private void addComponent(JLabel comp1, JComboBox<String> comp2,
+			JLabel comp3, JLabel comp4, JComboBox<String> comp5, JLabel comp6,
+			JComboBox<String> comp7) {
 		connFrame.add(comp1);
 		connFrame.add(comp2);
 		connFrame.add(comp3);
@@ -705,4 +621,19 @@ public class InsertConnectNodeFrame {
 		connFrame.add(comp7);
 	}
 
+	public void setConstrains(JLabel comp1, JComboBox<String> comp2,
+			JLabel comp3, JLabel comp4, JComboBox<String> comp5, JLabel comp6,
+			JComboBox<String> comp7) {
+		s.gridwidth = 1;
+		s.weightx = 0;
+		s.weighty = 0;
+		gb.setConstraints(comp1, s);
+		gb.setConstraints(comp2, s);
+		gb.setConstraints(comp3, s);
+		gb.setConstraints(comp4, s);
+		gb.setConstraints(comp5, s);
+		gb.setConstraints(comp6, s);
+		s.gridwidth = 0;
+		gb.setConstraints(comp7, s);
+	}
 }
