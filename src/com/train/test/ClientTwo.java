@@ -16,10 +16,8 @@ public class ClientTwo implements Runnable{
 	private InputStreamReader inputStreamReader;
 	private BufferedReader bufferedReader;
 	private PrintWriter printWriter;
-	private String name;
 	public ClientTwo(String name){
 		try {
-			this.name = name;
 			socket = new Socket("127.0.0.1", Config.ServerPort);
 			inputStreamReader = new InputStreamReader(socket.getInputStream());
 			bufferedReader = new BufferedReader(inputStreamReader);

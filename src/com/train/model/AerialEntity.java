@@ -3,12 +3,12 @@ package com.train.model;
 public class AerialEntity {
 	private int id;
 	private String aerialName;
-	private String sateLongitude;
-	private String aeWorkFre;
-	private String aePolarization;
-	private String reWorkStatus;
-	private String reOffsetFre;
-	private String reFre;
+	private String sateLongitude; //卫星经度
+	private String aeWorkFre; // 天线工作频段
+	private String aePolarization; // 天线极化方式
+	private String reWorkStatus;// 接收机工作状态
+	private String reOffsetFre;// 接收机频偏
+	private String reFre;// 接收机频率
 
 	public String getAerialName() {
 		return aerialName;

@@ -224,18 +224,21 @@ public class AddAerialParamFrame extends JFrame {
 						|| reFre.equals("")) {
 					JOptionPane.showMessageDialog(addAerialFrame, "请填写完整。",
 							"信息不完整", JOptionPane.ERROR_MESSAGE);
+				} else if (aerialName.length() > 5) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"参数组名字不能超过5个字", "填写有误", JOptionPane.ERROR_MESSAGE);
 				} else {
 					AerialEntity insert = new AerialEntity();
 					insert.setAerialName(aerialName);
-					insert.setSateLongitude(sateLongitude);
+					insert.setSateLongitude(sateLongitude + "°");
 					insert.setAeWorkFre(aeWorkFre);
 					insert.setAePolarization(aePolarization);
 					insert.setReWorkStatus(reWorkStatus);
 					insert.setReOffsetFre(reOffsetFre);
 					insert.setReFre(reFre);
 					if (aerialEntityDao.insert(insert)) {// 更新成功
-						JOptionPane.showMessageDialog(addAerialFrame, "添加成功", "添加成功",
-								JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(addAerialFrame, "添加成功",
+								"添加成功", JOptionPane.INFORMATION_MESSAGE);
 						lastFrame.setEnabled(true);
 						lastFrame.addRow(insert);
 						addAerialFrame.dispose();

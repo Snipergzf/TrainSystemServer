@@ -10,9 +10,9 @@ import com.train.database.DBUtil;
 import com.train.model.AerialEntity;
 
 public class AerialEntityDao {
-	
-	//查询得到每个参数组ArrayList
-	public ArrayList<AerialEntity> queryEntityList() throws SQLException{
+
+	// 查询得到每个参数组ArrayList
+	public ArrayList<AerialEntity> queryEntityList() throws SQLException {
 		ArrayList<AerialEntity> ret = new ArrayList<>();
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
@@ -34,11 +34,10 @@ public class AerialEntityDao {
 			ret.add(tmp);
 		}
 		return ret;
-		
+
 	}
-	
-	
-	//查询得到每个卫星参数组的名字Arraylist
+
+	// 查询得到每个卫星参数组的名字Arraylist
 	public ArrayList<String> queryNameList() throws SQLException {
 		ArrayList<String> ret = new ArrayList<>();
 		Connection conn = DBUtil.getConnection();
@@ -56,8 +55,8 @@ public class AerialEntityDao {
 		}
 		return ret;
 	}
-	
-	//根据卫星参数组名字查询该组参数
+
+	// 根据卫星参数组名字查询该组参数
 	public AerialEntity query(String aerialName) throws SQLException {
 		AerialEntity ret = new AerialEntity();
 		Connection conn = DBUtil.getConnection();
@@ -80,8 +79,8 @@ public class AerialEntityDao {
 		}
 		return ret;
 	}
-	
-	//根据参数组的id查询该组参数
+
+	// 根据参数组的id查询该组参数
 	public AerialEntity query(int id) throws SQLException {
 		AerialEntity ret = new AerialEntity();
 		Connection conn = DBUtil.getConnection();
@@ -104,8 +103,32 @@ public class AerialEntityDao {
 		}
 		return ret;
 	}
-	
-	//根据卫星参数名查询对应ID
+
+	// 根据connection表的ipaddress查询对应的卫星参数组
+	public AerialEntity queryByIp(String ipaddress) throws SQLException {
+		AerialEntity ret = new AerialEntity();
+		Connection conn = DBUtil.getConnection();
+		if (conn == null) {
+			return ret;
+		}
+		String sql = "SELECT * FROM aerialParams a, connection b WHERE a.id=b.aerialNum AND b.ipaddress=?";
+		PreparedStatement ptmt = conn.prepareStatement(sql);
+		ptmt.setString(1, ipaddress);
+		ResultSet rs = ptmt.executeQuery();
+		while (rs.next()) {
+			ret.setId(rs.getInt("id"));
+			ret.setAerialName(rs.getString("aerialName"));
+			ret.setSateLongitude(rs.getString("sateLongitude"));
+			ret.setAeWorkFre(rs.getString("aeWorkFre"));
+			ret.setAePolarization(rs.getString("aePolarization"));
+			ret.setReWorkStatus(rs.getString("reWorkStatus"));
+			ret.setReOffsetFre(rs.getString("reOffsetFre"));
+			ret.setReFre(rs.getString("reFre"));
+		}
+		return ret;
+	}
+
+	// 根据卫星参数名查询对应ID
 	public int queryId(String aerialName) throws SQLException {
 		int ret = -1;
 		Connection conn = DBUtil.getConnection();
@@ -122,7 +145,7 @@ public class AerialEntityDao {
 		return ret;
 	}
 
-	//插入一个卫星参数组实体
+	// 插入一个卫星参数组实体
 	public boolean insert(AerialEntity aerialEntity) throws SQLException {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
@@ -142,8 +165,7 @@ public class AerialEntityDao {
 		return !ptmt.execute();
 	}
 
-	
-	//根据ID更新,不能根据名称更新,以防止名称被修改
+	// 根据ID更新,不能根据名称更新,以防止名称被修改
 	public boolean update(AerialEntity aerialEntity) throws SQLException {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
@@ -162,17 +184,16 @@ public class AerialEntityDao {
 		ptmt.setInt(8, aerialEntity.getId());
 		return !ptmt.execute();
 	}
-	
-	//根据参数组的名字删除该组参数
-	public boolean delete(String aerialName) throws SQLException{
+
+	// 根据参数组的名字删除该组参数
+	public boolean delete(String aerialName) throws SQLException {
 		Connection conn = DBUtil.getConnection();
 		if (conn == null) {
-			return false; 
+			return false;
 		}
 		String sql = "DELETE FROM aerialParams WHERE aerialName=?";
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		ptmt.setString(1, aerialName);
 		return !ptmt.execute();
 	}
-	
 }

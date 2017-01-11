@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -78,7 +76,6 @@ public class ConfigAerialParamFrame extends JFrame {
 			listSelectionModel
 					.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			table.setDefaultRenderer(Object.class, new TableCellStyle());
-			table.addMouseListener(new MyMouseListener());
 
 			tablePane = new JScrollPane(table);
 			splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -153,6 +150,7 @@ public class ConfigAerialParamFrame extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
+				selectRowIndex = table.getSelectedRow();
 				if (selectRowIndex == -1) {
 					JOptionPane.showMessageDialog(configFrame, "请选择要删除行",
 							"删除不成功", JOptionPane.ERROR_MESSAGE);
@@ -172,11 +170,14 @@ public class ConfigAerialParamFrame extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
+				selectRowIndex = table.getSelectedRow();
 				if (selectRowIndex == -1) {
 					JOptionPane.showMessageDialog(configFrame, "请选择要修改行",
 							"修改不成功", JOptionPane.ERROR_MESSAGE);
 				} else {
-					new ChangeAerialParamFrame(configFrame, logger, rowDataArrayList.get(selectRowIndex));
+					String aerialName = (String) tableModel.getValueAt(
+							selectRowIndex, 1); 
+					new ChangeAerialParamFrame(configFrame, logger, aerialEntityDao.query(aerialName));
 					configFrame.setEnabled(false);
 				}
 			} catch (Exception e2) {
@@ -185,13 +186,6 @@ public class ConfigAerialParamFrame extends JFrame {
 		}
 	}
 	
-	private class MyMouseListener extends MouseAdapter {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			selectRowIndex = table.getSelectedRow();
-		}
-	}
-
 	public void addRow(AerialEntity aerialEntity) {
 		String[] rowValues = new String[8];
 		rowValues[0] = Integer.toString(tableModel.getRowCount() + 1);

@@ -13,9 +13,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import com.train.config.Config;
+import com.train.dao.AerialEntityDao;
 import com.train.dao.DataEntityDao;
 import com.train.dao.IpEntityDao;
 import com.train.dao.UserEntityDao;
+import com.train.model.AerialEntity;
 import com.train.model.DataEntity;
 
 /**
@@ -33,16 +35,21 @@ public class ComWorker implements Runnable {
 	private DataEntityDao dataEntityDao;
 	private UserEntityDao userEntityDao;
 	private IpEntityDao ipEntityDao;
+	private AerialEntityDao aerialEntityDao;
 	private Thread updateThread;
 	private Lock lock;
 	private JSONObject inJson;
 	private JSONObject outJson;
+	private DataEntity self;
+	private DataEntity checker;
+	private AerialEntity aerialEntity;
 
 	public ComWorker(Socket s, Logger logger, String IPAddress)
 			throws IOException {
 		this.dataEntityDao = new DataEntityDao();
 		this.userEntityDao = new UserEntityDao();
 		this.ipEntityDao = new IpEntityDao();
+		this.aerialEntityDao = new AerialEntityDao();
 		this.dataEntity = new DataEntity();
 		this.IPAddress = IPAddress;
 		this.socket = s;
@@ -71,12 +78,12 @@ public class ComWorker implements Runnable {
 					case Config.UPDATE:
 						userEntityDao.addOperationCount(IPAddress);
 						dataEntity.update(dataJsonString);
-						logger.info(IPAddress +" UPDATE completed");
+						logger.info(IPAddress + " UPDATE completed");
 						UpdateFlag = true;
 						break;
 					case Config.CHECK:
 						dataEntityDao.addEntity(IPAddress, dataJsonString);
-						logger.info(IPAddress +" CHECK completed");
+						logger.info(IPAddress + " CHECK completed");
 						break;
 					case Config.HEART:
 						break;
@@ -100,41 +107,17 @@ public class ComWorker implements Runnable {
 	private class UpdateThread implements Runnable {
 		@Override
 		public void run() {
-			//隔4秒检查更新情况，如果有数据则更新；不管有无更新数据都进行连接检查
+			// 隔4秒检查更新情况，如果有数据则更新；不管有无更新数据都进行连接检查
 			while (true) {
-				if (dataEntityDao == null) {
-					logger.error("dao is missing");
-				}
 				try {
 					lock.lock();
-					if (UpdateFlag) {//无数据更新
+					if (UpdateFlag) {// 无数据更新
 						UpdateFlag = false;
-						checkConnected(IPAddress);
-					} else if (dataEntity.data != null
-							&& dataEntity.data.size() > 0) {//有数据更新
-						if (dataEntityDao.updateEntity(dataEntity.data,
-								IPAddress)) { // 更新数据库data
-							/*List<DataEntity> connectDataEntities = dataEntityDao
-									.queryConnectEntity(IPAddress); // 查找与当前用户特定数据一致的用户
-							if (connectDataEntities != null
-									&& connectDataEntities.size() > 1) {
-								// 与请求连接者有相同数据的情况
-								String connectedIp = "";
-								int count = 0;
-								DataEntity selfDataEntity = connectDataEntities
-										.get(0);
-								for (int i = 1; i < connectDataEntities.size(); i++) {
-									if (checkConnected(selfDataEntity,
-											connectDataEntities.get(i))) {
-										count++;
-										connectedIp = connectDataEntities
-												.get(i).getiPAddress();
-									}
-								}
-								if (count == 1) {
-									output(connectedIp);
-								}
-							}*/
+						checkConnected();
+					} else if (dataEntity.data != null && dataEntity.data.size() > 0) {// 有数据更新
+						if (dataEntityDao.updateEntity(dataEntity.data, IPAddress)) {
+							// 更新数据库data,并成功
+							checkConnected();
 						}
 						dataEntity.data = new HashMap<String, String>(); // 清空data
 					}
@@ -147,18 +130,105 @@ public class ComWorker implements Runnable {
 		}
 	}
 
-//	public boolean checkConnected(DataEntity self, DataEntity checker) {
-	public boolean checkConnected(String ipaddress) {
+	public boolean checkConnected() {
 		try {
-			DataEntity self = dataEntityDao.queryEntity(ipaddress);
-			String connipaddress = ipEntityDao.queryConn(ipaddress);
-			DataEntity checker = dataEntityDao.queryEntity(connipaddress);
-			
-			//设置设备编号
-			if (self.getMC_deviceId().equals(checker.getMC_deviceId())) {
+			// 检查卫星参数组是否为空
+			aerialEntity = aerialEntityDao.queryByIp(IPAddress);
+			if (aerialEntity == null || aerialEntity.getAerialName().equals("")) {
 				return false;
 			}
-			//设置群路时钟
+			// 查询并检查当前用户的参数对象
+			self = dataEntityDao.queryEntity(IPAddress);
+			String connipaddress = ipEntityDao.queryConn(IPAddress);
+			if (connipaddress == null || connipaddress.equals("")) {
+				return false;
+			}
+			// 查询并检查需匹配用户的参数对象
+			checker = dataEntityDao.queryEntity(connipaddress);
+			if (self == null || checker == null
+					|| self.getMC_deviceId().equals("")
+					|| checker.getMC_deviceId().equals("")) {
+				return false;
+			}
+			// 设置设备编号
+			if (self.getMC_deviceId().equals(checker.getMC_deviceId())) {
+				// 告知用户设备编号相同
+				outputError();
+				return false;
+			}
+			// 检查必须相同的参数部分
+			// 群路速率
+			if (!self.getMC_groupRate().equals(checker.getMC_groupRate())) {
+				return false;
+			}
+			// 群路接口
+			if (!self.getMC_groupInterface().equals(
+					checker.getMC_groupInterface())) {
+				return false;
+			}
+			// 视频速率
+			if (!self.getMC_videoRate().equals(checker.getMC_videoRate())) {
+				return false;
+			}
+			// 视频编解码器接口类型
+			if (!self.getVC_interfaceType().equals(
+					checker.getVC_interfaceType())) {
+				return false;
+			}
+			// 视频编解码器传输速率
+			if (!self.getVC_rate().equals(checker.getVC_rate())) {
+				return false;
+			}
+			// 视频编解码器编码格式
+			if (!self.getVC_codeFormat().equals(checker.getVC_codeFormat())) {
+				return false;
+			}
+			// 视频编解码器图像格式
+			if (!self.getVC_imageFormat().equals(checker.getVC_imageFormat())) {
+				return false;
+			}
+			// 视频编解码器帧率
+			if (!self.getVC_frameRateValues().equals(
+					checker.getVC_frameRateValues())) {
+				return false;
+			}
+			// 视频编解码器音频参数
+			if (!self.getVC_audioParameValues().equals(
+					checker.getVC_audioParameValues())) {
+				return false;
+			}
+			// 视频编解码器同步数据设置
+			if (!self.getVC_synData().equals(checker.getVC_synData())) {
+				return false;
+			}
+			// 调制解调器接口类型
+			if (!self.getMD_interfaceType().equals(
+					checker.getMD_interfaceType())) {
+				return false;
+			}
+			// 调制解调器接口码型
+			if (!self.getMD_interfaceCodeType().equals(
+					checker.getMD_interfaceCodeType())) {
+				return false;
+			}
+			// 调制解调器基带环路
+			if (self.getMD_systemBasicLoop().equals("ON")
+					|| checker.getMD_systemBasicLoop().equals("ON")) {
+				return false;
+			}
+			// 调制解调器编码环路
+			if (self.getMD_systemCodeLoop().equals("ON")
+					|| checker.getMD_systemCodeLoop().equals("ON")) {
+				return false;
+			}
+			// 调制解调器帧环路
+			if (self.getMD_systemFrameLoop().equals("ON")
+					|| checker.getMD_systemFrameLoop().equals("ON")) {
+				return false;
+			}
+
+			// 无需一致
+			// 设置群路时钟
 			String s_group_clock = self.getMC_groupClock();
 			String c_group_clock = checker.getMC_groupClock();
 			if (s_group_clock.equals("外钟")
@@ -168,142 +238,185 @@ public class ComWorker implements Runnable {
 							.equals("内钟"))) {
 				return false;
 			}
-			//设置视频发钟  设置视频收钟
-			String s_videoSendClock = self.getMC_videoSendClock();
-			String s_videoReceivedClock = self.getMC_videoReceivedClock();
-			String c_videoSendClock = checker.getMC_videoSendClock();
-			String c_videoReceivedClock = checker.getMC_videoReceivedClock();
-			if ((!s_videoSendClock.equals(c_videoReceivedClock)) || (!s_videoReceivedClock.equals(c_videoSendClock))) {
+			// 设置视频发钟
+			if (!self.getMC_videoSendClock().equals(
+					checker.getMC_videoReceivedClock())) {
 				return false;
 			}
-			//时钟选择
-			if (!self.getVC_clock().equals(checker.getVC_clock()) || self.getVC_clock().equals("外钟")) {
+			// 设置视频收钟
+			if (!self.getMC_videoReceivedClock().equals(
+					checker.getMC_videoSendClock())) {
 				return false;
 			}
-			//调制解调器
-			String s_sendDataRate = self.getMD_modemSendDataRate();
-			String c_ReceiveDataRate = checker.getMD_deModemReceiveDataRate();
-			if (!s_sendDataRate.equals(c_ReceiveDataRate)) {
+			// 编解码器时钟选择
+			String s_vcClock = self.getVC_clock();
+			String c_vcClock = checker.getVC_clock();
+			if (s_vcClock.equals("外时钟")
+					|| (s_vcClock.equals("内时钟") && c_vcClock.equals("外时钟"))
+					|| (s_vcClock.equals("收时钟") && !c_vcClock.equals("内时钟"))) {
 				return false;
 			}
-			String s_modemScrambleType = self.getMD_modemScrambleType();
-			String c_deModemDescrambleType = checker.getMD_deModemDescrambleType();
-			if (!s_modemScrambleType.equals(c_deModemDescrambleType)) {
+			// 调制解调器发数据速率
+			if (!self.getMD_modemSendDataRate().equals(
+					checker.getMD_deModemReceiveDataRate())) {
 				return false;
 			}
-			String s_modemDifferEncode = self.getMD_modemDifferEncode();
-			String c_deModemDifferEncode = checker.getMD_deModemDifferEncode();
-			if (!s_modemDifferEncode.equals(c_deModemDifferEncode)) {
+			// 调制解调器扰码方式
+			if (!self.getMD_modemScrambleType().equals(
+					checker.getMD_deModemDescrambleType())) {
 				return false;
 			}
-			String s_modemRSCode = self.getMD_modemRSCode();
-			String c_deModemRSDecode = self.getMD_deModemRSDecode();
-			if (!s_modemRSCode.equals(c_deModemRSDecode)) {
+			// 调制解调器差分编码
+			if (!self.getMD_modemDifferEncode().equals(
+					checker.getMD_deModemDifferEncode())) {
 				return false;
 			}
-			String s_modemConvoluCode = self.getMD_modemConvoluCode();
-			String c_deModemConvoluDecode = self.getMD_deModemConvoluDecode();
-			if (!s_modemConvoluCode.equals(c_deModemConvoluDecode)) {
+			// 调制解调器RS编码
+			if (!self.getMD_modemRSCode().equals(
+					checker.getMD_deModemRSDecode())) {
 				return false;
 			}
-			String s_modemType = self.getMD_modemType();
-			String c_deModemType = checker.getMD_deModemType();
-			if (!s_modemType.equals(c_deModemType)) {
+			// 调制解调器卷积编码
+			if (!self.getMD_modemConvoluCode().equals(
+					checker.getMD_deModemConvoluDecode())) {
 				return false;
 			}
-			String s_modemCarrierOutput = self.getMD_modemCarrierOutput();
-			String c_modemCarrierOutput = checker.getMD_modemCarrierOutput();
-			if (s_modemCarrierOutput.equals("N") || c_modemCarrierOutput.equals("N")) {
+			// 调制解调器调制方式
+			if (!self.getMD_modemType().equals(checker.getMD_deModemType())) {
 				return false;
 			}
-			String s_modemSendCarrierFrequence = self.getMD_modemSendCarrierFrequence();
-			String c_deModemReceiveCarrierFrequence = checker.getMD_deModemReceiveCarrierFrequence();
-			if (!s_modemSendCarrierFrequence.equals(c_deModemReceiveCarrierFrequence)) {
+			// 载波输出、上变频器倒换、上变频器射频输出、下变频器倒换、高频放大器的发射待机状态、射频输出
+			if (self.getMD_modemCarrierOutput().equals("N")
+					|| self.getUC_LocalMachine().equals("离")
+					|| self.getUC_radioOutput().equals("断")
+					|| checker.getDC_LocalMachine().equals("离")
+					|| self.getHA_SendAwait().equals("待机")
+					|| Integer.valueOf(self.getHA_RadioFrequencyOutputW()) <= 1) {
 				return false;
 			}
-			String s_deModemReceiveDataRate = self.getMD_deModemReceiveDataRate();
-			String c_modemSendDataRate = checker.getMD_modemSendDataRate();
-			if (!s_deModemReceiveDataRate.equals(c_modemSendDataRate)) {
+			// 发方调制解调器发载波频率、发方上变频器的频率、收方调制解调器收载波频率、收方下变频器的频率
+			if ((Integer.valueOf(self.getMD_modemSendCarrierFrequence())
+					+ Integer.valueOf(self.getUC_frequence()) - 1750) != (Integer
+					.valueOf(checker.getMD_deModemReceiveCarrierFrequence()) + Integer
+					.valueOf(checker.getDC_frequence()))) {
 				return false;
 			}
-			String s_deModemDescrambleType = self.getMD_deModemDescrambleType();
-			String c_modemScrambleType = checker.getMD_modemScrambleType();
-			if (!s_deModemDescrambleType.equals(c_modemScrambleType)) {
+			// 调制解调器收数据速率
+			if (!self.getMD_deModemReceiveDataRate().equals(
+					checker.getMD_modemSendDataRate())) {
 				return false;
 			}
-			String s_deModemDifferEncode = self.getMD_deModemDifferEncode();
-			String c_modemDifferEncode = checker.getMD_modemDifferEncode();
-			if (!s_deModemDifferEncode.equals(c_modemDifferEncode)) {
+			// 调制解调器解扰方式
+			if (!self.getMD_deModemDescrambleType().equals(
+					checker.getMD_modemScrambleType())) {
 				return false;
 			}
-			String s_deModemRSDecode = self.getMD_deModemRSDecode();
-			String c_modemRSCode = checker.getMD_modemRSCode();
-			if (!s_deModemRSDecode.equals(c_modemRSCode)) {
+			// 调制解调器差分译码
+			if (!self.getMD_deModemDifferEncode().equals(
+					checker.getMD_modemDifferEncode())) {
 				return false;
 			}
-			String s_deModemConvoluDecode = self.getMD_deModemConvoluDecode();
-			String c_modemConvoluCode = checker.getMD_modemConvoluCode();
-			if (!s_deModemConvoluDecode.equals(c_modemConvoluCode)) {
+			// 调制解调器RS译码
+			if (!self.getMD_deModemRSDecode().equals(
+					checker.getMD_modemRSCode())) {
 				return false;
 			}
-			String s_deModemType = self.getMD_deModemType();
-			String c_modemType = checker.getMD_modemType();
-			if (!s_deModemType.equals(c_modemType)) {
+			// 调制解调器卷积译码
+			if (!self.getMD_deModemConvoluDecode().equals(
+					checker.getMD_modemConvoluCode())) {
 				return false;
 			}
-			String s_deModemReceiveCarrierFrequence = self.getMD_deModemReceiveCarrierFrequence();
-			String c_modemSendCarrierFrequence = checker.getMD_modemSendCarrierFrequence();
-			if (!s_deModemReceiveCarrierFrequence.equals(c_modemSendCarrierFrequence)) {
+			// 调制解调器解调方式
+			if (!self.getMD_deModemType().equals(checker.getMD_modemType())) {
 				return false;
 			}
-			String s_frameType = self.getMD_frameType();
-			String c_deframeType = checker.getMD_deframeType();
-			if (!s_frameType.equals(c_deframeType)) {
+			// 收载波频率
+
+			// 成帧类型
+			if (!self.getMD_frameType().equals(checker.getMD_deframeType())) {
 				return false;
 			}
-			String s_frameParam = self.getMD_frameParam();
-			String c_frameParam = checker.getMD_frameParam();
-			if (s_frameParam.equals("N") || c_frameParam.equals("N")) {
+			// 成帧时钟相位
+			if (!self.getMD_frameSClockPhase().equals(
+					checker.getMD_deframeSClockPhase())) {
 				return false;
 			}
-			String s_frameSClockPhase = self.getMD_frameSClockPhase();
-			String c_deframeSClockPhase = checker.getMD_deframeSClockPhase();
-			if (!s_frameSClockPhase.equals(c_deframeSClockPhase)) {
+			// 成帧勤务接口
+			if (!self.getMD_frameSServiceInterface().equals(
+					checker.getMD_deframeRServiceInterface())) {
 				return false;
 			}
-			String s_frameSServiceInterface = self.getMD_frameSServiceInterface();
-			String c_deframeRServiceInterface = checker.getMD_deframeRServiceInterface();
-			if (!s_frameSServiceInterface.equals(c_deframeRServiceInterface)) {
+			// 成帧数据时钟
+			if (!self.getMD_frameSDataClock().equals(
+					checker.getMD_frameSDataClock())) {
 				return false;
 			}
-			String s_frameSDataClock = self.getMD_frameSDataClock();
-			String c_frameSDataClock = checker.getMD_frameSDataClock();
-			if (!s_frameSDataClock.equals(c_frameSDataClock)) {
+			// 解帧类型
+			if (!self.getMD_deframeType().equals(checker.getMD_frameType())) {
 				return false;
 			}
-			String s_deframeType = self.getMD_deframeType();
-			String c_frameType = checker.getMD_frameType();
-			if (!s_deframeType.equals(c_frameType)) {
+			// 解帧时钟相位
+			if (!self.getMD_deframeSClockPhase().equals(
+					checker.getMD_frameSClockPhase())) {
 				return false;
 			}
-			String s_deframeSClockPhase = self.getMD_deframeSClockPhase();
-			String c_frameSClockPhase = checker.getMD_frameSClockPhase();
-			if (!s_deframeSClockPhase.equals(c_frameSClockPhase)) {
+			// 解帧勤务接口
+			if (!self.getMD_deframeRServiceInterface().equals(
+					checker.getMD_frameSServiceInterface())) {
 				return false;
 			}
-			String s_deframeRServiceInterface = self.getMD_deframeRServiceInterface();
-			String c_frameSServiceInterface = checker.getMD_frameSServiceInterface();
-			if (!s_deframeRServiceInterface.equals(c_frameSServiceInterface)) {
+
+			// 比对卫星参数
+			// 卫星经度
+			if ((!self.getSateLongitude().equals(
+					aerialEntity.getSateLongitude()))
+					&& (!checker.getSateLongitude().equals(
+							aerialEntity.getSateLongitude()))) {
 				return false;
 			}
+			// 天线工作频段
+			if ((!self.getAeWorkFre().equals(aerialEntity.getAeWorkFre()))
+					|| (!checker.getAeWorkFre().equals(
+							aerialEntity.getAeWorkFre()))) {
+				return false;
+			}
+			// 天线极化方式
+			if ((!self.getAePolarization().equals(
+					aerialEntity.getAePolarization()))
+					|| (!checker.getAePolarization().equals(
+							aerialEntity.getAePolarization()))) {
+				return false;
+			}
+			// 接收机工作状态
+			if ((aerialEntity.getReWorkStatus().equals("中频自检"))
+					|| (!self.getReWorkStatus().equals(
+							aerialEntity.getReWorkStatus()))
+					|| (!checker.getReWorkStatus().equals(
+							aerialEntity.getReWorkStatus()))) {
+				return false;
+			}
+			// 接收机频偏
+			if ((!self.getReOffsetFre().equals(aerialEntity.getReOffsetFre()))
+					|| (!checker.getReOffsetFre().equals(
+							aerialEntity.getReOffsetFre()))) {
+				return false;
+			}
+			// 接收机频率
+			if ((!self.getReFre().equals(aerialEntity.getReFre()))
+					|| (!checker.getReFre().equals(aerialEntity.getReFre()))) {
+				return false;
+			}
+
+			// 表示连通，返回连接对象的IP
+			outputConnect(checker.getiPAddress());
+			return true;
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return false;
 		}
-		return true;
 	}
 
-	public void output(String ipAddress) throws Exception {
+	public void outputConnect(String ipAddress) throws Exception {
 		if (out == null) {
 			logger.error("socket is disconnected");
 			return;
@@ -318,6 +431,26 @@ public class ComWorker implements Runnable {
 				out.flush();
 				userEntityDao.updateConnectWith(IPAddress, ipAddress);
 				logger.info(IPAddress + " connected with " + ipAddress);
+			} else {
+				return;
+			}
+		}
+	}
+
+	public void outputError() throws Exception {
+		if (out == null) {
+			logger.error("socket is disconnected");
+			return;
+		} else {
+			if (IPAddress != null && !IPAddress.trim().equals("")) {
+				outJson = new JSONObject();
+				outJson.put("status", 0);
+				JSONObject message = new JSONObject();
+				message.put("DeviceIdError", "Same deviceId");
+				outJson.put("message", message.toString());
+				out.println(outJson.toString());
+				out.flush();
+				logger.info("Same deviceId");
 			} else {
 				return;
 			}

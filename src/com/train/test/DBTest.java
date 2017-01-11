@@ -30,7 +30,6 @@ public class DBTest {
 		dataEntity.setMD_frameSDataClock("123");
 		dataEntity.setMD_frameSServiceInterface("123");
 		dataEntity.setMD_frameType("123");
-		dataEntity.setMD_frameParam("123");
 		dataEntity.setMD_interfaceCodeType("13");
 		dataEntity.setMD_interfaceType("13");
 		dataEntity.setMD_modemCarrierOutput("123");

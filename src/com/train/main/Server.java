@@ -320,7 +320,6 @@ public class Server {
 		serverConsole.append("\t解调方式:\t"+dataEntity.getMD_deModemType()+"\n");
 		serverConsole.append("\t解调收载波频率:\t"+dataEntity.getMD_deModemReceiveCarrierFrequence()+"\n");
 		serverConsole.append("\t成帧类型:\t"+dataEntity.getMD_frameType()+"\n");
-		serverConsole.append("\t载波参数:\t"+dataEntity.getMD_frameParam()+"\n");
 		serverConsole.append("\t成帧发时钟相位:\t"+dataEntity.getMD_frameSClockPhase()+"\n");
 		serverConsole.append("\t成帧发勤务接口:\t"+dataEntity.getMD_frameSServiceInterface()+"\n");
 		serverConsole.append("\t成帧发数据时钟:\t"+dataEntity.getMD_frameSDataClock()+"\n");
@@ -329,6 +328,22 @@ public class Server {
 		serverConsole.append("\t解帧收勤务接口:\t"+dataEntity.getMD_deframeRServiceInterface()+"\n");
 		serverConsole.append("\t接口类型:\t"+dataEntity.getMD_interfaceType()+"\n");
 		serverConsole.append("\t接口码型:\t"+dataEntity.getMD_interfaceCodeType()+"\n");
+		serverConsole.append("\t基带环路:\t"+dataEntity.getMD_systemBasicLoop()+"\n");
+		serverConsole.append("\t编码环路:\t"+dataEntity.getMD_systemCodeLoop()+"\n");
+		serverConsole.append("\t帧环路:\t"+dataEntity.getMD_systemFrameLoop()+"\n");
+		serverConsole.append("\t上变频器频率:\t"+dataEntity.getUC_frequence()+"\n");
+		serverConsole.append("\t上变频器倒换:\t"+dataEntity.getUC_LocalMachine()+"\n");
+		serverConsole.append("\t上变频器射频输出:\t"+dataEntity.getUC_radioOutput()+"\n");
+		serverConsole.append("\t下变频器频率:\t"+dataEntity.getDC_frequence()+"\n");
+		serverConsole.append("\t下变频器倒换:\t"+dataEntity.getDC_LocalMachine()+"\n");
+		serverConsole.append("\t发射待机状态:\t"+dataEntity.getHA_SendAwait()+"\n");
+		serverConsole.append("\t射频输出:\t"+dataEntity.getHA_RadioFrequencyOutputW()+"\n");
+		serverConsole.append("\t卫星经度:\t"+dataEntity.getSateLongitude()+"\n");
+		serverConsole.append("\t天线工作频段:\t"+dataEntity.getAeWorkFre()+"\n");
+		serverConsole.append("\t天线极化方式:\t"+dataEntity.getAePolarization()+"\n");
+		serverConsole.append("\t接收机工作状态:\t"+dataEntity.getReWorkStatus()+"\n");
+		serverConsole.append("\t接收机频偏:\t"+dataEntity.getReOffsetFre()+"\n");
+		serverConsole.append("\t接收机频率:\t"+dataEntity.getReFre()+"\n");
 	}
 	
 

@@ -71,7 +71,8 @@ public class ChangeAerialParamFrame extends JFrame {
 	private AerialEntity lastEntity;
 	private AerialEntityDao aerialEntityDao;
 
-	public ChangeAerialParamFrame(ConfigAerialParamFrame lastFrame, Logger logger, AerialEntity lastEntity) {
+	public ChangeAerialParamFrame(ConfigAerialParamFrame lastFrame,
+			Logger logger, AerialEntity lastEntity) {
 		super("添加天线参数");
 		this.changeFrame = this;
 		this.changeFrame.setResizable(false);
@@ -164,7 +165,7 @@ public class ChangeAerialParamFrame extends JFrame {
 		f5.setSelectedItem(lastEntity.getReWorkStatus());
 		f6.setText(lastEntity.getReOffsetFre());
 		f7.setText(lastEntity.getReFre());
-		
+
 		changeFrame.setSize(300, 300);
 		// set frame to be created in center
 		int[] xy = CommonUtil.getCenterXY(changeFrame);
@@ -238,15 +239,15 @@ public class ChangeAerialParamFrame extends JFrame {
 					AerialEntity change = new AerialEntity();
 					change.setId(lastEntity.getId());
 					change.setAerialName(aerialName);
-					change.setSateLongitude(sateLongitude);
+					change.setSateLongitude(sateLongitude + "°");
 					change.setAeWorkFre(aeWorkFre);
 					change.setAePolarization(aePolarization);
 					change.setReWorkStatus(reWorkStatus);
 					change.setReOffsetFre(reOffsetFre);
 					change.setReFre(reFre);
 					if (aerialEntityDao.update(change)) {// 更新成功
-						JOptionPane.showMessageDialog(changeFrame, "修改成功", "修改成功",
-								JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(changeFrame, "修改成功",
+								"修改成功", JOptionPane.INFORMATION_MESSAGE);
 						lastFrame.setEnabled(true);
 						lastFrame.changeRow(change);
 						changeFrame.dispose();

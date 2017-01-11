@@ -24,7 +24,7 @@ public class DataEntity {
 	private String VC_frameRateValues; // 帧率
 	private String VC_audioParameValues; // 音频参数
 	private String VC_synData; // 同步数据设置
-	// 调制解调器25个参数
+	// 调制解调器27个参数
 	private String MD_modemSendDataRate; // 调制 发数据速率
 	private String MD_modemScrambleType; // 调制 扰码方式
 	private String MD_modemDifferEncode; // 调制 差分编码
@@ -41,7 +41,6 @@ public class DataEntity {
 	private String MD_deModemType; // 解调 方式
 	private String MD_deModemReceiveCarrierFrequence;// 收载波频率
 	private String MD_frameType; // 成帧 类型
-	private String MD_frameParam; // 载波输出
 	private String MD_frameSClockPhase; // 成帧 发时钟相位
 	private String MD_frameSServiceInterface; // 成帧 发勤务接口
 	private String MD_frameSDataClock; // 成帧 发数据时钟
@@ -50,6 +49,156 @@ public class DataEntity {
 	private String MD_deframeRServiceInterface; // 解帧 收勤务接口
 	private String MD_interfaceType; // 接口 类型
 	private String MD_interfaceCodeType; // 接口 码型
+	private String MD_systemBasicLoop; // 基带环路
+	private String MD_systemCodeLoop; // 编码环路
+	private String MD_systemFrameLoop; // 帧环路
+	//上变频器3个参数
+	private String UC_frequence; //上变频器频率
+	private String UC_LocalMachine; //上变频器倒换
+	private String UC_radioOutput; //上变频器射频输出
+	//下变频器2个参数
+	private String DC_frequence; //下变频器频率
+	private String DC_LocalMachine; // 下变频器倒换
+	//高频放大器2个参数
+	private String HA_SendAwait; //发射待机状态
+	private String HA_RadioFrequencyOutputW; //射频输出
+	//卫星参数6个参数
+	private String sateLongitude;  //卫星经度
+	private String aeWorkFre;  //天线工作频段
+	private String aePolarization; //天线极化方式
+	private String reWorkStatus;//接收机工作状态
+	private String reOffsetFre;//接收机频偏
+	private String reFre;//接收机频率
+	
+	public String getSateLongitude() {
+		return sateLongitude;
+	}
+
+	public void setSateLongitude(String sateLongitude) {
+		this.sateLongitude = sateLongitude;
+	}
+
+	public String getAeWorkFre() {
+		return aeWorkFre;
+	}
+
+	public void setAeWorkFre(String aeWorkFre) {
+		this.aeWorkFre = aeWorkFre;
+	}
+
+	public String getAePolarization() {
+		return aePolarization;
+	}
+
+	public void setAePolarization(String aePolarization) {
+		this.aePolarization = aePolarization;
+	}
+
+	public String getReWorkStatus() {
+		return reWorkStatus;
+	}
+
+	public void setReWorkStatus(String reWorkStatus) {
+		this.reWorkStatus = reWorkStatus;
+	}
+
+	public String getReOffsetFre() {
+		return reOffsetFre;
+	}
+
+	public void setReOffsetFre(String reOffsetFre) {
+		this.reOffsetFre = reOffsetFre;
+	}
+
+	public String getReFre() {
+		return reFre;
+	}
+
+	public void setReFre(String reFre) {
+		this.reFre = reFre;
+	}
+
+	public String getHA_SendAwait() {
+		return HA_SendAwait;
+	}
+
+	public void setHA_SendAwait(String hA_SendAwait) {
+		HA_SendAwait = hA_SendAwait;
+	}
+
+	public String getHA_RadioFrequencyOutputW() {
+		return HA_RadioFrequencyOutputW;
+	}
+
+	public void setHA_RadioFrequencyOutputW(String hA_RadioFrequencyOutputW) {
+		HA_RadioFrequencyOutputW = hA_RadioFrequencyOutputW;
+	}
+
+	public String getMD_systemBasicLoop() {
+		return MD_systemBasicLoop;
+	}
+
+	public void setMD_systemBasicLoop(String mD_systemBasicLoop) {
+		MD_systemBasicLoop = mD_systemBasicLoop;
+	}
+
+	public String getMD_systemCodeLoop() {
+		return MD_systemCodeLoop;
+	}
+
+	public void setMD_systemCodeLoop(String mD_systemCodeLoop) {
+		MD_systemCodeLoop = mD_systemCodeLoop;
+	}
+
+	public String getMD_systemFrameLoop() {
+		return MD_systemFrameLoop;
+	}
+
+	public void setMD_systemFrameLoop(String mD_systemFrameLoop) {
+		MD_systemFrameLoop = mD_systemFrameLoop;
+	}
+
+	public String getUC_frequence() {
+		return UC_frequence;
+	}
+
+	public void setUC_frequence(String uC_frequence) {
+		UC_frequence = uC_frequence;
+	}
+
+	public String getUC_LocalMachine() {
+		return UC_LocalMachine;
+	}
+
+	public void setUC_LocalMachine(String uC_LocalMachine) {
+		UC_LocalMachine = uC_LocalMachine;
+	}
+
+	public String getUC_radioOutput() {
+		return UC_radioOutput;
+	}
+
+	public void setUC_radioOutput(String uC_radioOutput) {
+		UC_radioOutput = uC_radioOutput;
+	}
+
+	public String getDC_frequence() {
+		return DC_frequence;
+	}
+
+	public void setDC_frequence(String dC_frequence) {
+		DC_frequence = dC_frequence;
+	}
+
+	public String getDC_LocalMachine() {
+		return DC_LocalMachine;
+	}
+
+	public void setDC_LocalMachine(String dC_LocalMachine) {
+		DC_LocalMachine = dC_LocalMachine;
+	}
+
+
 
 	public HashMap<String, String> data;
 
@@ -388,14 +537,6 @@ public class DataEntity {
 		this.data = data;
 	}
 
-	public String getMD_frameParam() {
-		return MD_frameParam;
-	}
-
-	public void setMD_frameParam(String mD_frameParam) {
-		MD_frameParam = mD_frameParam;
-	}
-
 	public void update(String str) {
 		JSONObject updateJson;
 		if (str != null && !str.equals("")) {
@@ -408,18 +549,4 @@ public class DataEntity {
 		}
 		updateJson = null;
 	}
-
-	// public String toString() {
-	// StringBuilder ret = new StringBuilder();
-	// ret.append("modemSendDataRate=" + getModemSendDataRate() + ",");
-	// ret.append("modemScrambleType=" + getModemScrambleType() + ",");
-	// ret.append("modemDifferEncode=" + getModemDifferEncode() + ",");
-	// ret.append("modemRSCode=" + getModemRSCode() + ",");
-	// ret.append("modemConvoluCode=" + getModemConvoluCode() + ",");
-	// ret.append("modemType=" + getModemType() + ",");
-	// ret.append("modemCarrierOutput=" + getModemCarrierOutput() + ",");
-	// ret.deleteCharAt(ret.length() - 1);
-	//
-	// return ret.toString();
-	// }
 }
