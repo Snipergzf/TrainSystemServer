@@ -111,15 +111,17 @@ public class ComWorker implements Runnable {
 			while (true) {
 				try {
 					lock.lock();
-					if (UpdateFlag) {// 无数据更新
-						UpdateFlag = false;
+					if (!UpdateFlag) {// 无数据更新
 						checkConnected();
-					} else if (dataEntity.data != null && dataEntity.data.size() > 0) {// 有数据更新
-						if (dataEntityDao.updateEntity(dataEntity.data, IPAddress)) {
+					} else if (dataEntity.data != null
+							&& dataEntity.data.size() > 0) {// 有数据更新
+						if (dataEntityDao.updateEntity(dataEntity.data,
+								IPAddress)) {
 							// 更新数据库data,并成功
 							checkConnected();
+							dataEntity.data = new HashMap<String, String>(); // 清空data
 						}
-						dataEntity.data = new HashMap<String, String>(); // 清空data
+						UpdateFlag = false;
 					}
 					lock.unlock();
 					Thread.sleep(4 * 1000);

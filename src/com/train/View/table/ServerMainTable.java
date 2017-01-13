@@ -22,6 +22,15 @@ public class ServerMainTable extends JTable {
 	private ServerMainTable serverMainTable;
 	private UserEntityDao userEntityDao;
 	
+	public ServerMainTable(DefaultTableModel tbModel) {
+		super(tbModel);
+		this.tableModel = tbModel;
+		this.serverMainTable = this;
+		this.serverMainTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.serverMainTable.setDefaultRenderer(Object.class, new MyTableCellRenderer());
+	}
+
+	
 	public ServerMainTable(DefaultTableModel tbModel, UserEntityDao userEntityDao) {
 		super(tbModel);
 		this.tableModel = tbModel;

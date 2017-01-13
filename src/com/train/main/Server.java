@@ -33,6 +33,10 @@ import com.train.config.Config;
 import com.train.dao.DataEntityDao;
 import com.train.dao.UserEntityDao;
 import com.train.logUtil.MyLog;
+import com.train.swingworker.OnlineSwingUpdateWorker;
+import com.train.swingworker.OnlineSwingWorker;
+import com.train.swingworker.PersonSwingUpdateWorker;
+import com.train.swingworker.PersonSwingWorker;
 
 /**
  * @author gzf
@@ -63,6 +67,10 @@ public class Server {
 	private String[][] rowData;
 	private DefaultTableModel tableModel;
 	private Font textFont;
+	private OnlineSwingWorker onlineSwingWorker;
+	private OnlineSwingUpdateWorker onlineSwingUpdateWorker;
+	private PersonSwingWorker personSwingWorker;
+	private PersonSwingUpdateWorker personSwingUpdateWorker;
 
 	public void init() throws Exception {
 		initNetWork();
@@ -190,9 +198,8 @@ public class Server {
 					.queryUser());
 			tableModel = new DefaultTableModel(rowData, Config.onLineTitles);
 			serverMainTable = new ServerMainTable(tableModel, userEntityDao);
-			// 初始化主界面personTable,但不立马显示
-			serverPersonTable = new ServerPersonTable(new DefaultTableModel(
-					new String[0][4], Config.personTitle), dataEntityDao);
+			serverMainTable.setEnabled(false);
+
 			jScrollPane = new JScrollPane();
 			jScrollPane.setViewportView(serverMainTable);
 		} catch (Exception e) {
@@ -234,9 +241,15 @@ public class Server {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				if (WINDOW.equals("ONLINE")) {
-					serverMainTable.queryUser(inputField.getText().trim());
+					onlineSwingUpdateWorker = new OnlineSwingUpdateWorker(
+							serverMainTable, tableModel, userEntityDao, inputField
+									.getText().trim());
+					onlineSwingUpdateWorker.execute();
 				} else {// PERSON
-					serverPersonTable.queryUser(inputField.getText().trim());
+					personSwingUpdateWorker = new PersonSwingUpdateWorker(
+							serverPersonTable, tableModel, dataEntityDao,
+							inputField.getText().trim());
+					personSwingUpdateWorker.execute();
 				}
 			} catch (Exception e1) {
 				logger.error(e1.getMessage());
@@ -244,16 +257,22 @@ public class Server {
 		}
 	}
 
-	//查询输入框监听器
+	// 查询输入框监听器
 	public class MyAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				try {
 					if (WINDOW.equals("ONLINE")) {
-						serverMainTable.queryUser(inputField.getText().trim());
+						onlineSwingUpdateWorker = new OnlineSwingUpdateWorker(
+								serverMainTable, tableModel, userEntityDao, inputField
+										.getText().trim());
+						onlineSwingUpdateWorker.execute();
 					} else {// PERSON
-						serverPersonTable.queryUser(inputField.getText().trim());
+						personSwingUpdateWorker = new PersonSwingUpdateWorker(
+								serverPersonTable, tableModel, dataEntityDao,
+								inputField.getText().trim());
+						personSwingUpdateWorker.execute();
 					}
 				} catch (Exception e1) {
 					logger.error(e1.getMessage());
@@ -292,10 +311,17 @@ public class Server {
 	public void refresh() {
 		try {
 			if (WINDOW.equals("ONLINE")) {
-				serverMainTable.queryUser(inputField.getText().trim());
+				onlineSwingUpdateWorker = new OnlineSwingUpdateWorker(
+						serverMainTable, tableModel, userEntityDao, inputField
+								.getText().trim());
+				onlineSwingUpdateWorker.execute();
 			} else {// PERSON
-				serverPersonTable.queryUser(inputField.getText().trim());
+				personSwingUpdateWorker = new PersonSwingUpdateWorker(
+						serverPersonTable, tableModel, dataEntityDao,
+						inputField.getText().trim());
+				personSwingUpdateWorker.execute();
 			}
+			System.out.println("refreshed");
 		} catch (Exception e2) {
 			logger.error(e2.getMessage());
 		}
@@ -320,7 +346,11 @@ public class Server {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				WINDOW = "PERSON";
-				serverPersonTable.queryUser(inputField.getText().trim());
+				rowData = CommonUtil.loadServerPersonTableData(dataEntityDao
+						.queryEntity(inputField.getText().trim()));
+				tableModel = new DefaultTableModel(rowData, Config.personTitle);
+				serverPersonTable = new ServerPersonTable(tableModel);
+				serverPersonTable.setEnabled(false);
 				jScrollPane.setViewportView(serverPersonTable);
 			} catch (Exception e1) {
 				logger.error(e1.getMessage());
@@ -334,7 +364,11 @@ public class Server {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				WINDOW = "ONLINE";
-				serverMainTable.queryUser(inputField.getText().trim());
+				rowData = CommonUtil.loadServerMainTableData(userEntityDao
+						.queryUser(inputField.getText().trim()));
+				tableModel = new DefaultTableModel(rowData, Config.onLineTitles);
+				serverMainTable = new ServerMainTable(tableModel);
+				serverMainTable.setEnabled(false);
 				jScrollPane.setViewportView(serverMainTable);
 			} catch (Exception e1) {
 				logger.error(e1.getMessage());
