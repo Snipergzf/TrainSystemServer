@@ -134,7 +134,7 @@ public class ComWorker implements Runnable {
 		try {
 			// 检查卫星参数组是否为空
 			aerialEntity = aerialEntityDao.queryByIp(IPAddress);
-			if (aerialEntity == null || aerialEntity.getAerialName().equals("")) {
+			if (aerialEntity == null || aerialEntity.getAerialName() == null) {
 				return false;
 			}
 			// 查询并检查当前用户的参数对象
@@ -146,8 +146,8 @@ public class ComWorker implements Runnable {
 			// 查询并检查需匹配用户的参数对象
 			checker = dataEntityDao.queryEntity(connipaddress);
 			if (self == null || checker == null
-					|| self.getMC_deviceId().equals("")
-					|| checker.getMC_deviceId().equals("")) {
+					|| self.getMC_deviceId() == null
+					|| checker.getMC_deviceId() == null) {
 				return false;
 			}
 			// 设置设备编号

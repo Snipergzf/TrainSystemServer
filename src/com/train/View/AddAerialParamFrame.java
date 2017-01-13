@@ -1,9 +1,12 @@
 package com.train.View;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import javax.swing.JButton;
@@ -69,7 +72,12 @@ public class AddAerialParamFrame extends JFrame {
 	private String reOffsetFre = "";
 	private String reFre = "";
 	private AerialEntityDao aerialEntityDao;
-
+	private final String nameInitStr= "不超过5个字";
+	private final String sateInitStr= "-180~180数字";
+	private final String offsetInitStr= "-256~256数字";
+	private final String reFreInitStr= "1~30000数字";
+	private MyMouseAdapter myMouseAdapter;
+	
 	public AddAerialParamFrame(ConfigAerialParamFrame lastFrame, Logger logger) {
 		super("添加天线参数");
 		this.addAerialFrame = this;
@@ -189,16 +197,36 @@ public class AddAerialParamFrame extends JFrame {
 		l5 = new JLabel("接收机工作状态");
 		l6 = new JLabel("接收机频偏");
 		l7 = new JLabel("接收机频率");
-		f1 = new JTextField();
-		f2 = new JTextField();
+		myMouseAdapter = new MyMouseAdapter();
+		f1 = new JTextField(nameInitStr);
+		f1.setForeground(Color.gray);
+		f1.addMouseListener(myMouseAdapter);
+		f2 = new JTextField(sateInitStr);
+		f2.setForeground(Color.gray);
+		f2.addMouseListener(myMouseAdapter);
 		f3 = new JComboBox<String>(Config.workFreStrings);
 		f4 = new JComboBox<String>(Config.polarizationStrings);
 		f5 = new JComboBox<String>(Config.workStatusStrings);
-		f6 = new JTextField();
-		f7 = new JTextField();
-
+		f6 = new JTextField(offsetInitStr);
+		f6.setForeground(Color.gray);
+		f6.addMouseListener(myMouseAdapter);
+		f7 = new JTextField(reFreInitStr);
+		f7.setForeground(Color.gray);
+		f7.addMouseListener(myMouseAdapter);
 	}
 
+	private class MyMouseAdapter extends MouseAdapter {
+		@Override
+		public void mousePressed(MouseEvent e) {
+			JTextField src = (JTextField) e.getSource();
+			src.setForeground(Color.black);
+			if (src.getText().equals(nameInitStr) || src.getText().equals(sateInitStr) || src.getText().equals(offsetInitStr) || src.getText().equals(reFreInitStr)) {
+				src.setText(null);
+			}
+		}
+	}
+	
+	
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
@@ -224,29 +252,61 @@ public class AddAerialParamFrame extends JFrame {
 						|| reFre.equals("")) {
 					JOptionPane.showMessageDialog(addAerialFrame, "请填写完整。",
 							"信息不完整", JOptionPane.ERROR_MESSAGE);
-				} else if (aerialName.length() > 5) {
+					return;
+				} 
+				if (aerialName.length() > 5) {
 					JOptionPane.showMessageDialog(addAerialFrame,
 							"参数组名字不能超过5个字", "填写有误", JOptionPane.ERROR_MESSAGE);
-				} else {
-					AerialEntity insert = new AerialEntity();
-					insert.setAerialName(aerialName);
-					insert.setSateLongitude(sateLongitude + "°");
-					insert.setAeWorkFre(aeWorkFre);
-					insert.setAePolarization(aePolarization);
-					insert.setReWorkStatus(reWorkStatus);
-					insert.setReOffsetFre(reOffsetFre);
-					insert.setReFre(reFre);
-					if (aerialEntityDao.insert(insert)) {// 更新成功
-						JOptionPane.showMessageDialog(addAerialFrame, "添加成功",
-								"添加成功", JOptionPane.INFORMATION_MESSAGE);
-						lastFrame.setEnabled(true);
-						lastFrame.addRow(insert);
-						addAerialFrame.dispose();
-					} else {// 更新不成功
-						JOptionPane.showMessageDialog(addAerialFrame,
-								"请检查参数组名称是否重复，具体原因请查看系统日志。", "添加不成功",
-								JOptionPane.ERROR_MESSAGE);
-					}
+					return;
+				}
+				if (!CommonUtil.checkDigit(sateLongitude)) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"\"卫星经度\"项应填写-180到180内数字", "填写有误", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (Math.abs(Integer.valueOf(sateLongitude)) > 180) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"\"卫星经度\"项超出范围，请填写-180°到180°内", "填写有误", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (!CommonUtil.checkDigit(reOffsetFre)) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"\"接收机频偏\"项应填写-256到256内数字", "填写有误", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (Math.abs(Integer.valueOf(reOffsetFre)) > 256) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"\"接收机频偏\"项超出范围，请填写-256到256内", "填写有误", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (!CommonUtil.checkDigit(reFre)) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"\"接收机频率\"项应填写1到30000内数字", "填写有误", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (Integer.valueOf(reFre) < 1 || Integer.valueOf(reFre) > 30000) {
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"\"接收机频率\"项超出范围，请填写1到30000内", "填写有误", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				AerialEntity insert = new AerialEntity();
+				insert.setAerialName(aerialName);
+				insert.setSateLongitude(sateLongitude + "°");
+				insert.setAeWorkFre(aeWorkFre);
+				insert.setAePolarization(aePolarization);
+				insert.setReWorkStatus(reWorkStatus);
+				insert.setReOffsetFre(reOffsetFre);
+				insert.setReFre(reFre);
+				if (aerialEntityDao.insert(insert)) {// 更新成功
+					JOptionPane.showMessageDialog(addAerialFrame, "添加成功",
+							"添加成功", JOptionPane.INFORMATION_MESSAGE);
+					lastFrame.setEnabled(true);
+					lastFrame.addRow(insert);
+					addAerialFrame.dispose();
+				} else {// 更新不成功
+					JOptionPane.showMessageDialog(addAerialFrame,
+							"请检查参数组名称是否重复，具体原因请查看系统日志。", "添加不成功",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			} catch (SQLException e1) {
 				logger.error(e1.getMessage());
@@ -256,5 +316,4 @@ public class AddAerialParamFrame extends JFrame {
 			}
 		}
 	}
-
 }

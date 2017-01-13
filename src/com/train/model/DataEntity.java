@@ -70,6 +70,12 @@ public class DataEntity {
 	private String reOffsetFre;//接收机频偏
 	private String reFre;//接收机频率
 	
+	public HashMap<String, String> data;
+
+	public DataEntity() {
+		data = new HashMap<String, String>();
+	}
+
 	public String getSateLongitude() {
 		return sateLongitude;
 	}
@@ -196,14 +202,6 @@ public class DataEntity {
 
 	public void setDC_LocalMachine(String dC_LocalMachine) {
 		DC_LocalMachine = dC_LocalMachine;
-	}
-
-
-
-	public HashMap<String, String> data;
-
-	public DataEntity() {
-		data = new HashMap<String, String>();
 	}
 
 	public String getiPAddress() {

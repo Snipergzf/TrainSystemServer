@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,7 +20,9 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import org.apache.log4j.Logger;
+import com.train.Style.MyTableCellRenderer;
 import com.train.Util.CommonUtil;
+import com.train.View.table.ConfigAeParamTable;
 import com.train.config.Config;
 import com.train.dao.AerialEntityDao;
 import com.train.model.AerialEntity;
@@ -35,7 +39,7 @@ public class ConfigAerialParamFrame extends JFrame {
 	private JButton add;
 	private JButton delete;
 	private JButton change;
-	private MyJTable table;
+	private ConfigAeParamTable table;
 	private DefaultTableModel tableModel;
 	private ListSelectionModel listSelectionModel;
 	private AerialEntityDao aerialEntityDao;
@@ -71,11 +75,11 @@ public class ConfigAerialParamFrame extends JFrame {
 			delete = new JButton("删除");
 			change = new JButton("修改");
 			tableModel = new DefaultTableModel(rowData, Config.paramNames);
-			table = new MyJTable(tableModel);
+			table = new ConfigAeParamTable(tableModel);
 			listSelectionModel = table.getSelectionModel();
 			listSelectionModel
 					.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table.setDefaultRenderer(Object.class, new TableCellStyle());
+			table.setDefaultRenderer(Object.class, new MyTableCellRenderer());
 
 			tablePane = new JScrollPane(table);
 			splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -216,4 +220,14 @@ public class ConfigAerialParamFrame extends JFrame {
 			tableModel.setValueAt(aerialEntity.getReFre(), selectRowIndex, 7);
 		}
 	}
+	
+	
+//	private class MyMouseListener extends MouseAdapter{
+//
+//		@Override
+//		public void mouseMoved(MouseEvent e) {
+//			
+//		}
+//		
+//	}
 }

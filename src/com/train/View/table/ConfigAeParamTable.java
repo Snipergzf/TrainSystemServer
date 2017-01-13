@@ -1,16 +1,16 @@
-package com.train.View;
+package com.train.View.table;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class MyJTable extends JTable {
+public class ConfigAeParamTable extends JTable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public MyJTable(DefaultTableModel tbModel) {
+	public ConfigAeParamTable(DefaultTableModel tbModel) {
 		super(tbModel);
 	}
 

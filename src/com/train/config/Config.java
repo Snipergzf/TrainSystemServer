@@ -16,8 +16,13 @@ public class Config {
 	public static final int UPDATE = 2;
 	public static final int HEART = 4;
 	// 天线参数
-	public static final String[] paramNames = {"序号", "参数组名", "卫星经度", "天线工作频段", "天线极化方式",
-			"接收机工作状态", "接收机频偏", "接收机频率" };
+	public static final String[] paramNames = { "序号", "参数组名", "卫星经度", "天线工作频段",
+			"天线极化方式", "接收机工作状态", "接收机频偏", "接收机频率" };
+	// 主界面在线情况标题
+	public static final String[] onLineTitles = { "序号", "IP地址", "上线时间", "在线情况",
+			"连接情况", "连接对象", "操作次数" };
+	//主界面单人数据查询标题
+	public static final String[] personTitle = {"参数名", "参数值", "参数名", "参数值"};
 	// 天线工作频段选择
 	public static final String[] workFreStrings = { "ku", "Ka" };
 	// 天线极化方式选择
